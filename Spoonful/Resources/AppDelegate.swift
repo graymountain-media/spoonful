@@ -18,8 +18,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         window = UIWindow(frame: UIScreen.main.bounds)
         
-        let mainMenuViewController = MainMenuViewController()
-        let navigationController = UINavigationController(rootViewController: mainMenuViewController)
+        let mainViewController = MainViewController()
+        let navigationController = UINavigationController(rootViewController: mainViewController)
         
         navigationController.navigationBar.barTintColor = main
         

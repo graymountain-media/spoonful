@@ -8,7 +8,7 @@
 
 import UIKit
 
-class CreationViewController: UIViewController {
+class MainViewController: UIViewController {
     
     let profileButton: UIButton = {
         let button = UIButton(frame: CGRect(x: 0, y: 0, width: 39, height: 39))
@@ -52,10 +52,12 @@ class CreationViewController: UIViewController {
     //MARK:- Private Methods
     
     private func setNavigationBar() {
-        navigationItem.rightBarButtonItem = UIBarButtonItem(customView: profileButton)
+        navigationItem.leftBarButtonItem = UIBarButtonItem(customView: profileButton)
         navigationController?.navigationBar.barTintColor = .clear
+        navigationController?.navigationBar.tintColor = milkWhite
         navigationController?.navigationBar.shadowImage = UIImage()
         navigationController?.navigationBar.setBackgroundImage(UIImage(), for: UIBarMetrics.default)
+        
     }
     
     private func setViews() {
@@ -77,7 +79,15 @@ class CreationViewController: UIViewController {
     
     @objc private func newOrderButtonPressed() {
         newOrderButton.backgroundColor = .white
-        print("hi")
+        let buildVC = BuildViewController()
+        let buildNavigationController = UINavigationController(rootViewController: buildVC)
+        buildNavigationController.modalPresentationStyle = UIModalPresentationStyle.currentContext
+        
+        buildNavigationController.navigationBar.prefersLargeTitles = true
+        buildNavigationController.navigationBar.setBackgroundImage(UIImage(), for: UIBarMetrics.default)
+        buildNavigationController.navigationBar.shadowImage = UIImage()
+        
+        present(buildNavigationController, animated: true, completion: nil)
     }
     
     @objc private func newOrderButtonTouchDown() {
