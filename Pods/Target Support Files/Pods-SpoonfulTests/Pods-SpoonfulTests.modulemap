@@ -1,0 +1,6 @@
+framework module Pods_SpoonfulTests {
+  umbrella header "Pods-SpoonfulTests-umbrella.h"
+
+  export *
+  module * { export * }
+}
