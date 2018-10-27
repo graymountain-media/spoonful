@@ -39,6 +39,8 @@ class MainViewController: UIViewController {
         return button
     }()
     
+    //MARK:- Life Cycle
+    
     override func viewDidLoad() {
         super.viewDidLoad()
        
@@ -54,7 +56,7 @@ class MainViewController: UIViewController {
     private func setNavigationBar() {
         navigationItem.leftBarButtonItem = UIBarButtonItem(customView: profileButton)
         navigationController?.navigationBar.barTintColor = .clear
-        navigationController?.navigationBar.tintColor = milkWhite
+        navigationController?.navigationBar.tintColor = .white
         navigationController?.navigationBar.shadowImage = UIImage()
         navigationController?.navigationBar.setBackgroundImage(UIImage(), for: UIBarMetrics.default)
         
@@ -79,15 +81,9 @@ class MainViewController: UIViewController {
     
     @objc private func newOrderButtonPressed() {
         newOrderButton.backgroundColor = .white
-        let buildVC = BuildViewController()
-        let buildNavigationController = UINavigationController(rootViewController: buildVC)
-        buildNavigationController.modalPresentationStyle = UIModalPresentationStyle.currentContext
+        let buildVC = NewOrderViewController()
         
-        buildNavigationController.navigationBar.prefersLargeTitles = true
-        buildNavigationController.navigationBar.setBackgroundImage(UIImage(), for: UIBarMetrics.default)
-        buildNavigationController.navigationBar.shadowImage = UIImage()
-        
-        present(buildNavigationController, animated: true, completion: nil)
+        navigationController?.pushViewController(buildVC, animated: true)
     }
     
     @objc private func newOrderButtonTouchDown() {
