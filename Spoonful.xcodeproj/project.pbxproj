@@ -17,7 +17,6 @@
 		A11A7130215C260600602B52 /* SpoonfulUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A11A712F215C260600602B52 /* SpoonfulUITests.swift */; };
 		A11A713F215C26B600602B52 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A11A713E215C26B600602B52 /* AppDelegate.swift */; };
 		A11A7141215C26EA00602B52 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = A11A7140215C26EA00602B52 /* Constants.swift */; };
-		A11F79A3215EB44E00B336EF /* NewOrderSectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A11F79A2215EB44E00B336EF /* NewOrderSectionView.swift */; };
 		A1253280217F831A0077E2E2 /* NewOrderViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A125327F217F831A0077E2E2 /* NewOrderViewController.swift */; };
 		A1253282217F85BC0077E2E2 /* StripeController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1253281217F85BC0077E2E2 /* StripeController.swift */; };
 		A1253284217F88470077E2E2 /* CustomerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1253283217F88470077E2E2 /* CustomerController.swift */; };
@@ -27,6 +26,10 @@
 		A1A791252184208B0012A4C3 /* Bowl.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1A791242184208B0012A4C3 /* Bowl.swift */; };
 		A1A791272184252A0012A4C3 /* Cereal.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1A791262184252A0012A4C3 /* Cereal.swift */; };
 		A1A79129218427E70012A4C3 /* Milk.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1A79128218427E60012A4C3 /* Milk.swift */; };
+		A1A7912B218505480012A4C3 /* BowlSizeChoiceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1A7912A218505480012A4C3 /* BowlSizeChoiceView.swift */; };
+		A1A7912D21850A070012A4C3 /* Prices.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1A7912C21850A070012A4C3 /* Prices.swift */; };
+		A1A7912F218520FB0012A4C3 /* CerealCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1A7912E218520FB0012A4C3 /* CerealCollectionViewCell.swift */; };
+		A1A79131218538AA0012A4C3 /* MilkCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1A79130218538AA0012A4C3 /* MilkCollectionViewCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -66,7 +69,6 @@
 		A11A7131215C260600602B52 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		A11A713E215C26B600602B52 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		A11A7140215C26EA00602B52 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
-		A11F79A2215EB44E00B336EF /* NewOrderSectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewOrderSectionView.swift; sourceTree = "<group>"; };
 		A125327F217F831A0077E2E2 /* NewOrderViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NewOrderViewController.swift; sourceTree = "<group>"; };
 		A1253281217F85BC0077E2E2 /* StripeController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StripeController.swift; sourceTree = "<group>"; };
 		A1253283217F88470077E2E2 /* CustomerController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomerController.swift; sourceTree = "<group>"; };
@@ -77,6 +79,10 @@
 		A1A791242184208B0012A4C3 /* Bowl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bowl.swift; sourceTree = "<group>"; };
 		A1A791262184252A0012A4C3 /* Cereal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Cereal.swift; sourceTree = "<group>"; };
 		A1A79128218427E60012A4C3 /* Milk.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Milk.swift; sourceTree = "<group>"; };
+		A1A7912A218505480012A4C3 /* BowlSizeChoiceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BowlSizeChoiceView.swift; sourceTree = "<group>"; };
+		A1A7912C21850A070012A4C3 /* Prices.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Prices.swift; sourceTree = "<group>"; };
+		A1A7912E218520FB0012A4C3 /* CerealCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CerealCollectionViewCell.swift; sourceTree = "<group>"; };
+		A1A79130218538AA0012A4C3 /* MilkCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MilkCollectionViewCell.swift; sourceTree = "<group>"; };
 		B94C9163E9C7189C5342E2F7 /* Pods-SpoonfulUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SpoonfulUITests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-SpoonfulUITests/Pods-SpoonfulUITests.debug.xcconfig"; sourceTree = "<group>"; };
 		D7A27AF85224FA566747E702 /* Pods-SpoonfulTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SpoonfulTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-SpoonfulTests/Pods-SpoonfulTests.release.xcconfig"; sourceTree = "<group>"; };
 		E67FE167BC9C514302BA800C /* Pods-SpoonfulTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SpoonfulTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-SpoonfulTests/Pods-SpoonfulTests.debug.xcconfig"; sourceTree = "<group>"; };
@@ -185,6 +191,7 @@
 				A11A711B215C260600602B52 /* Info.plist */,
 				A11A713E215C26B600602B52 /* AppDelegate.swift */,
 				A11A7140215C26EA00602B52 /* Constants.swift */,
+				A1A7912C21850A070012A4C3 /* Prices.swift */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -192,7 +199,9 @@
 		A11F79A4215EB4BE00B336EF /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				A11F79A2215EB44E00B336EF /* NewOrderSectionView.swift */,
+				A1A7912A218505480012A4C3 /* BowlSizeChoiceView.swift */,
+				A1A7912E218520FB0012A4C3 /* CerealCollectionViewCell.swift */,
+				A1A79130218538AA0012A4C3 /* MilkCollectionViewCell.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -453,15 +462,18 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A11F79A3215EB44E00B336EF /* NewOrderSectionView.swift in Sources */,
 				A1253284217F88470077E2E2 /* CustomerController.swift in Sources */,
+				A1A7912D21850A070012A4C3 /* Prices.swift in Sources */,
 				A1A7912321841E590012A4C3 /* Order.swift in Sources */,
+				A1A7912F218520FB0012A4C3 /* CerealCollectionViewCell.swift in Sources */,
 				A1A791272184252A0012A4C3 /* Cereal.swift in Sources */,
 				A1A791252184208B0012A4C3 /* Bowl.swift in Sources */,
 				A1253280217F831A0077E2E2 /* NewOrderViewController.swift in Sources */,
 				A11A713F215C26B600602B52 /* AppDelegate.swift in Sources */,
 				A11A7112215C260400602B52 /* MainViewController.swift in Sources */,
+				A1A7912B218505480012A4C3 /* BowlSizeChoiceView.swift in Sources */,
 				A1283B15217E5D4A004A8A3C /* Customer.swift in Sources */,
+				A1A79131218538AA0012A4C3 /* MilkCollectionViewCell.swift in Sources */,
 				A1A79129218427E70012A4C3 /* Milk.swift in Sources */,
 				A11A7141215C26EA00602B52 /* Constants.swift in Sources */,
 				A1253286217F8C100077E2E2 /* CheckoutViewController.swift in Sources */,

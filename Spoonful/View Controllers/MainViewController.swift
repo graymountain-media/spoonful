@@ -51,14 +51,20 @@ class MainViewController: UIViewController {
         setViews()
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        navigationController?.isNavigationBarHidden = true
+    }
+
+    
     //MARK:- Private Methods
     
     private func setNavigationBar() {
-        navigationItem.leftBarButtonItem = UIBarButtonItem(customView: profileButton)
-        navigationController?.navigationBar.barTintColor = .clear
-        navigationController?.navigationBar.tintColor = .white
-        navigationController?.navigationBar.shadowImage = UIImage()
-        navigationController?.navigationBar.setBackgroundImage(UIImage(), for: UIBarMetrics.default)
+//        navigationItem.leftBarButtonItem = UIBarButtonItem(customView: profileButton)
+//        navigationController?.navigationBar.barTintColor = .clear
+//        navigationController?.navigationBar.tintColor = .white
+//        navigationController?.navigationBar.shadowImage = UIImage()
+//        navigationController?.navigationBar.setBackgroundImage(UIImage(), for: UIBarMetrics.default)
         
     }
     

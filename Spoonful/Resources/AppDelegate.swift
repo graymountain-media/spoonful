@@ -24,7 +24,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let mainViewController = MainViewController()
         let navigationController = UINavigationController(rootViewController: mainViewController)
         
-        navigationController.navigationBar.barTintColor = main
+        navigationController.navigationBar.barTintColor = .white
+        navigationController.navigationBar.tintColor = main
+        navigationController.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor : main]
+        navigationController.navigationBar.shadowImage = UIImage()
         
         window?.rootViewController = navigationController
         window?.makeKeyAndVisible()

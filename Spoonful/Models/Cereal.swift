@@ -6,14 +6,16 @@
 //  Copyright © 2018 Jake Gray. All rights reserved.
 //
 
-import Foundation
+import UIKit
 
 struct Cereal {
     let name: String
     let price: Double
+    let image: UIImage
     
-    init(name: String, price: Double = 0.00) {
+    init(name: String, image: UIImage, price: Double = 0.00) {
         self.name = name
+        self.image = image
         self.price = price
     }
 }

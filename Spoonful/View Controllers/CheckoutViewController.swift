@@ -62,9 +62,10 @@ class CheckoutViewController: UIViewController {
 
     }
 }
+
 extension CheckoutViewController: STPPaymentContextDelegate {
 
-    //MARK: - STPPaymentContextDelegate
+    
     func paymentContext(_ paymentContext: STPPaymentContext, didFailToLoadWithError error: Error) {
         print("didFailToLoadWithError \(error.localizedDescription)")
     }
