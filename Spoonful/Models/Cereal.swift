@@ -8,7 +8,7 @@
 
 import UIKit
 
-struct Cereal {
+struct Cereal: Equatable {
     let name: String
     let price: Double
     let image: UIImage

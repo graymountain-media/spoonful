@@ -38,4 +38,30 @@ class StripeController: NSObject, STPEphemeralKeyProvider {
                 }
         }
     }
+    
+    func completeCharge(_ result: STPPaymentResult,
+                        amount: Int,
+                        completion: @escaping STPErrorBlock) {
+        print("Source: \(result.source)")
+        let url = baseURL!.appendingPathComponent("charge")
+        let params: [String: Any] = [
+            "customer" : "cus_DqwaqT1523VD4f",
+            "amount": amount,
+            "currency": "USD",
+            "metadata": [
+                // example-ios-backend allows passing metadata through to Stripe
+                "charge_request_id": "B3E611D1-5FA1-4410-9CEC-00958A5126CB",
+            ],
+        ]
+        Alamofire.request(url, method: .post, parameters: params)
+            .validate(statusCode: 200..<300)
+            .responseString { response in
+                switch response.result {
+                case .success:
+                    completion(nil)
+                case .failure(let error):
+                    completion(error)
+                }
+        }
+    }
 }

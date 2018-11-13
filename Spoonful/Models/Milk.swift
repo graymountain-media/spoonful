@@ -9,17 +9,23 @@
 import Foundation
 
 struct Milk {
-    enum MilkType: Double {
-        case whole
-        case twoPercent
-        case skim
-        case almond = 0.50
+    enum MilkType: String {
+        case whole = "Whole"
+        case twoPercent = "2%"
+        case skim = "Skim"
+        case almond = "Almond"
+        case soy = "Soy"
     }
     let type : MilkType
     let price: Double
     
-    init(type: MilkType, price: Double) {
+    init(type: MilkType) {
         self.type = type
-        self.price = price 
+        if type == MilkType.almond ||  type == MilkType.soy{
+            self.price = 0.50
+        } else {
+            self.price = 0.00
+        }
+        
     }
 }

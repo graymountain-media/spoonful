@@ -10,12 +10,14 @@ import Foundation
 
 class Order {
     let bowl: Bowl
-    let cereal: Cereal
+    let cereals: [Cereal]
     let milk: Milk
+    let total: Int
     
-    init(bowl: Bowl, cereal: Cereal, milk: Milk) {
+    init(bowl: Bowl, cereals: [Cereal], milk: Milk) {
         self.bowl = bowl
-        self.cereal = cereal
+        self.cereals = cereals
         self.milk = milk
+        self.total = 500
     }
 }

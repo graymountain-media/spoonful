@@ -24,9 +24,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let mainViewController = MainViewController()
         let navigationController = UINavigationController(rootViewController: mainViewController)
         
-        navigationController.navigationBar.barTintColor = .white
-        navigationController.navigationBar.tintColor = main
-        navigationController.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor : main]
+        navigationController.navigationBar.barTintColor = darktwo
+        navigationController.navigationBar.tintColor = .white
+        navigationController.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor : UIColor.white]
         navigationController.navigationBar.shadowImage = UIImage()
         
         window?.rootViewController = navigationController
@@ -44,6 +44,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         config.companyName = companyName
         config.requiredBillingAddressFields = .full
         config.additionalPaymentMethods = .applePay
+        
+        // Create card sources instead of card tokens
+        config.createCardSources = true;
     }
 }
 

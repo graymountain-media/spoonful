@@ -9,6 +9,7 @@
 import UIKit
 
 class CerealCollectionViewCell: UICollectionViewCell {
+    
     let imageView: UIImageView = {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false

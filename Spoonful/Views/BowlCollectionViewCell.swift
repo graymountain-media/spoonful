@@ -1,5 +1,5 @@
 //
-//  BowlSizeChoiceView.swift
+//  BowlCollectionViewCell.swift
 //  Spoonful
 //
 //  Created by Jake Gray on 10/27/18.
@@ -8,10 +8,10 @@
 
 import UIKit
 
-class BowlSizeChoiceView: UIView {
+class BowlCollectionViewCell: UICollectionViewCell {
     
     //Properties
-    let isSmall = false
+    var isSmall = false
 
     //Objects
     let imageView: UIImageView = {
@@ -31,7 +31,7 @@ class BowlSizeChoiceView: UIView {
         return label
     }()
     
-    init(frame: CGRect = CGRect(x: 0, y: 0, width: 100, height: 100), isSmall: Bool) {
+    override init(frame: CGRect) {
         super.init(frame: frame)
         
 //        self.translatesAutoresizingMaskIntoConstraints = false
@@ -45,31 +45,33 @@ class BowlSizeChoiceView: UIView {
         title.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -4).isActive = true
         title.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -8).isActive = true
         
-        if isSmall {
-            setSmall()
-        } else {
-            setLarge()
-        }
     }
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
+    func updateCell(isSmall: Bool) {
+        if isSmall {
+            setSmall()
+        } else {
+            setLarge()
+        }
+    }
     private func setSmall(){
         
-        imageView.widthAnchor.constraint(equalTo: self.widthAnchor, constant: -50).isActive = true
-        imageView.heightAnchor.constraint(equalTo: self.widthAnchor, constant: -50).isActive = true
-        imageView.bottomAnchor.constraint(equalTo: title.topAnchor, constant: 4).isActive = true
+        imageView.widthAnchor.constraint(equalTo: self.heightAnchor, constant: -50).isActive = true
+        imageView.topAnchor.constraint(equalTo: self.topAnchor, constant: 4).isActive = true
+        imageView.bottomAnchor.constraint(equalTo: title.topAnchor, constant: -4).isActive = true
         imageView.centerXAnchor.constraint(equalTo: self.centerXAnchor).isActive = true
         title.text = "Small"
     }
     
     private func setLarge(){
         
-        imageView.widthAnchor.constraint(equalTo: self.widthAnchor, constant: -35).isActive = true
-        imageView.heightAnchor.constraint(equalTo: self.widthAnchor, constant: -35).isActive = true
-        imageView.bottomAnchor.constraint(equalTo: title.topAnchor, constant: 4).isActive = true
+        imageView.widthAnchor.constraint(equalTo: self.heightAnchor, constant: -35).isActive = true
+        imageView.topAnchor.constraint(equalTo: self.topAnchor, constant: 4).isActive = true
+        imageView.bottomAnchor.constraint(equalTo: title.topAnchor, constant: -4).isActive = true
         imageView.centerXAnchor.constraint(equalTo: self.centerXAnchor).isActive = true
 
         title.text = "Large (+$0.50)"

@@ -13,15 +13,78 @@ class CheckoutViewController: UIViewController {
     
     //MARK:- Properties
     let cellIdentifier = "CheckoutCell"
-    let paymentContext: STPPaymentContext
     
-    //MARK:- Components
-    let mainTable: UITableView = {
-        let table = UITableView(frame: CGRect.zero, style: .grouped)
-        table.translatesAutoresizingMaskIntoConstraints = false
-        table.backgroundColor = offWhite
-        table.isScrollEnabled = false
-        return table
+    let paymentContext: STPPaymentContext
+    let paymentCurrency = "usd"
+    
+    var order: Order?
+    
+    let yourOrderLabel: UILabel = {
+        let label = UILabel()
+        label.textColor = .white
+        label.font = UIFont.systemFont(ofSize: 16, weight: .bold)
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.text = "Your Order"
+        return label
+    }()
+    
+    let orderView: UIView = {
+        let view = UIView()
+        view.backgroundColor = lightOne
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
+    let orderBowlImageView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.contentMode = .scaleAspectFit
+        return imageView
+    }()
+    
+    let orderCerealImageViewTop: UIImageView = {
+        let imageView = UIImageView()
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.contentMode = .scaleAspectFit
+        return imageView
+    }()
+    
+    let orderCerealImageViewBottom: UIImageView = {
+        let imageView = UIImageView()
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.contentMode = .scaleAspectFit
+        return imageView
+    }()
+    
+    let orderMilkImageView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.contentMode = .scaleAspectFit
+        return imageView
+    }()
+    
+    let totalView: CheckoutRow = {
+        let view = CheckoutRow(title: "Total", detail: "$0.00", tappable: false, frame: CGRect.zero)
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+        
+    }()
+    
+    let paymentView: CheckoutRow = {
+        let view = CheckoutRow(title: "Payment", detail: "", frame: CGRect.zero)
+        view.backgroundColor = .clear
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
+    lazy var completeButton: SpoonfulButton = {
+        let button = SpoonfulButton()
+        button.backgroundDefaultColor = .green
+        button.isEnabled = false
+        button.setTitleColor(.white, for: .normal)
+        button.setTitle("Complete Order", for: .normal)
+        button.addTarget(self, action: #selector(completeButtonPressed), for: .touchUpInside)
+        return button
     }()
     
     //MARK:- Life Cycle
@@ -30,37 +93,119 @@ class CheckoutViewController: UIViewController {
         view.backgroundColor = main
         self.title = "Checkout"
         // Do any additional setup after loading the view.
-        
-        setupTable()
+
+        setupOrderView()
+        setupCheckoutRows()
+        setupCompleteButton()
     }
     
     init() {
+        
         let customerContext = STPCustomerContext(keyProvider: StripeController.shared)
         self.paymentContext = STPPaymentContext(customerContext: customerContext)
         
         super.init(nibName: nil, bundle: nil)
         self.paymentContext.delegate = self
         self.paymentContext.hostViewController = self
-        self.paymentContext.paymentAmount = 5000 // This is in cents, i.e. $50 USD
+        guard let order = order else {return}
+//        let userInformation = STPUserInformation()
+//        paymentContext.prefilledInformation = userInformation
+        paymentContext.paymentAmount = order.total
+        paymentContext.paymentCurrency = self.paymentCurrency
+        
+        totalView.detail = "$ \(order.total/100)"
     }
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
-    private func setupTable() {
-        mainTable.delegate = self
-        mainTable.dataSource = self
-//        mainTable.register(UITableViewCell.self, forCellReuseIdentifier: cellIdentifier)
+    private func setupOrderView() {
         
-        view.addSubview(mainTable)
+        view.addSubview(orderView)
+        view.addSubview(yourOrderLabel)
         
-        mainTable.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor).isActive = true
-        mainTable.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
-        mainTable.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor).isActive = true
-        mainTable.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor).isActive = true
-
+        orderView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 30).isActive = true
+        orderView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor).isActive = true
+        orderView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor).isActive = true
+        orderView.heightAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.4).isActive = true
+        
+        yourOrderLabel.bottomAnchor.constraint(equalTo: orderView.topAnchor).isActive = true
+        yourOrderLabel.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor).isActive = true
+        yourOrderLabel.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor).isActive = true
+    
+        
+        if let order = order {
+            
+            let orderStackView = UIStackView(arrangedSubviews: [orderBowlImageView,orderCerealImageViewTop,orderMilkImageView])
+            orderStackView.axis = .horizontal
+            orderStackView.spacing = 4
+            orderStackView.distribution = .fillEqually
+            orderStackView.translatesAutoresizingMaskIntoConstraints = false
+            
+            orderCerealImageViewTop.image = order.cereals[0].image
+            
+            if order.bowl.size == .small {
+                orderBowlImageView.image = UIImage(named: "bowl-filled")
+            } else {
+                orderBowlImageView.image = UIImage(named: "bowl-filled")
+            }
+            
+            if order.cereals.count == 2 {
+                orderStackView.insertArrangedSubview(orderCerealImageViewBottom, at: 2)
+                orderCerealImageViewBottom.image = order.cereals[1].image
+            }
+            
+            orderMilkImageView.image = UIImage(named: "mockMilk")
+            
+            orderView.addSubview(orderStackView)
+            
+            orderStackView.topAnchor.constraint(equalTo: orderView.topAnchor, constant: 4).isActive = true
+            orderStackView.bottomAnchor.constraint(equalTo: orderView.bottomAnchor, constant: -4).isActive = true
+            orderStackView.leadingAnchor.constraint(equalTo: orderView.leadingAnchor, constant: 16).isActive = true
+            orderStackView.trailingAnchor.constraint(equalTo: orderView.trailingAnchor, constant: -16).isActive = true
+            
+            
+            
+            
+        } else {
+            print("order not passed")
+        }
     }
+    
+    private func setupCheckoutRows() {
+        view.addSubview(totalView)
+        view.addSubview(paymentView)
+//        totalView.frame = CGRect(x: 0, y: 300, width: view.frame.width, height: 50)
+        totalView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor).isActive = true
+        totalView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor).isActive = true
+        totalView.topAnchor.constraint(equalTo: orderView.bottomAnchor).isActive = true
+        totalView.heightAnchor.constraint(equalToConstant: 50).isActive = true
+        
+        paymentView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor).isActive = true
+        paymentView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor).isActive = true
+        paymentView.topAnchor.constraint(equalTo: totalView.bottomAnchor, constant: 16).isActive = true
+        paymentView.heightAnchor.constraint(equalToConstant: 50).isActive = true
+        
+        paymentView.onTap = { [weak self] in
+            self?.paymentContext.pushPaymentMethodsViewController()
+        }
+    }
+    
+    private func setupCompleteButton() {
+        view.addSubview(completeButton)
+        
+        completeButton.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 16).isActive = true
+        completeButton.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -16).isActive = true
+        completeButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -16).isActive = true
+        completeButton.heightAnchor.constraint(equalToConstant: 50).isActive = true
+    }
+    
+    //MARK:- Button Actions
+    @objc private func completeButtonPressed(){
+        self.paymentContext.requestPayment()
+    }
+    
 }
 
 extension CheckoutViewController: STPPaymentContextDelegate {
@@ -72,85 +217,53 @@ extension CheckoutViewController: STPPaymentContextDelegate {
     
     func paymentContextDidChange(_ paymentContext: STPPaymentContext) {
         print("paymentContextDidChange")
+        self.paymentView.loading = paymentContext.loading
+        if let paymentMethod = paymentContext.selectedPaymentMethod {
+            self.paymentView.detail = paymentMethod.label
+        }
+        else {
+            self.paymentView.detail = "Select Payment"
+        }
+        if paymentContext.selectedPaymentMethod != nil {
+            completeButton.isEnabled = true
+//            UIView.animate(withDuration: 0.2) {
+//                self.completeButton.isEnabled = true
+//                self.completeButton.backgroundColor = .green
+//                self.completeButton.alpha = 1
+//            }
+        } else {
+            completeButton.isEnabled = false
+//            UIView.animate(withDuration: 0.2) {
+//                self.completeButton.isEnabled = false
+//                self.completeButton.backgroundColor = .gray
+//                self.completeButton.alpha = 0.5
+//            }
+        }
+        
     }
     
     func paymentContext(_ paymentContext: STPPaymentContext, didCreatePaymentResult paymentResult: STPPaymentResult, completion: @escaping STPErrorBlock) {
         print("didCreatePaymentResult")
+        guard let order = order else {return}
+        StripeController.shared.completeCharge(paymentResult, amount: order.total, completion: { (error: Error?) in
+            if let error = error {
+                completion(error)
+            } else {
+                completion(nil)
+            }
+        })
+        
     }
     
     func paymentContext(_ paymentContext: STPPaymentContext, didFinishWith status: STPPaymentStatus, error: Error?) {
         print("didFinishWith")
+        
+        if let error = error {
+            print("Error with charge: \(error.localizedDescription )")
+        } else {
+            navigationController?.pushViewController(OrderCompleteViewController(), animated: true)
+        }
     }
     
 
-}
-
-extension CheckoutViewController: UITableViewDelegate, UITableViewDataSource {
-    func numberOfSections(in tableView: UITableView) -> Int {
-        return 2
-    }
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        switch section {
-        case 0:
-            return 2
-        default:
-            return 1
-        }
-    }
-    
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = UITableViewCell.init(style: .value1, reuseIdentifier: cellIdentifier)
-        cell.backgroundColor = .white
-        switch indexPath.section {
-        case 0:
-            switch indexPath.row {
-            case 0:
-                cell.textLabel?.text = "Your Order"
-                cell.isUserInteractionEnabled = false
-            default:
-                cell.isUserInteractionEnabled = false
-                cell.textLabel?.text = "Total"
-                cell.detailTextLabel?.text = "$5.00"
-            }
-        default:
-            cell.textLabel?.text = "Payment"
-            cell.detailTextLabel?.text = "Select Payment"
-        }
-        return cell
-    }
-    
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        switch indexPath.section{
-        case 0:
-            switch indexPath.row{
-            case 0:
-                return 200
-            default:
-                return 50
-            }
-        default:
-            return 50
-        }
-    }
-    
-    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        if section == 0 {
-            return "Your Order"
-        }
-        return ""
-    }
-    
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        
-        switch indexPath.section{
-        case 1:
-            paymentContext.presentPaymentMethodsViewController()
-            tableView.deselectRow(at: indexPath, animated: true)
-        default:
-            return()
-        }
-        
-    }
-    
-    
 }
