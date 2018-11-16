@@ -10,12 +10,16 @@ import UIKit
 
 class MainViewController: UIViewController {
     
-    let profileButton: UIButton = {
+    lazy var profileButton: UIButton = {
         let button = UIButton(frame: CGRect(x: 0, y: 0, width: 39, height: 39))
         button.setImage(UIImage(named: "profile"), for: .normal)
         button.contentMode = .scaleAspectFit
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.addTarget(self, action: #selector(profileButtonPressed), for: .touchUpInside)
         return button
     }()
+    
+    let profileMenu = ProfileMenuView()
     
     let logoImageView: UIImageView = {
         let imageView = UIImageView()
@@ -25,19 +29,20 @@ class MainViewController: UIViewController {
         return imageView
     }()
     
-    lazy var newOrderButton: UIButton = {
-        let button = UIButton()
+    lazy var newOrderButton: SpoonfulButton = {
+        let button = SpoonfulButton()
         button.setTitle("New Order", for: .normal)
-        button.setTitleColor(main, for: .normal)
         button.addTarget(self, action: #selector(newOrderButtonPressed), for: .touchUpInside)
-        button.addTarget(self, action: #selector(newOrderButtonTouchDown), for: .touchDown)
-        button.backgroundColor = .white
-        button.tintColor = .white
-        button.layer.cornerRadius = 20
-        button.clipsToBounds = true
-        button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
+    
+    lazy var tapGestureRecognizer: UITapGestureRecognizer = {
+        let recognizer = UITapGestureRecognizer()
+        recognizer.addTarget(self, action: #selector(dismissProfileMenu))
+        return recognizer
+    }()
+    
+    //MARK:- Life Cycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -49,20 +54,28 @@ class MainViewController: UIViewController {
         setViews()
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        navigationController?.isNavigationBarHidden = true
+    }
+
+    
     //MARK:- Private Methods
     
     private func setNavigationBar() {
-        navigationItem.leftBarButtonItem = UIBarButtonItem(customView: profileButton)
-        navigationController?.navigationBar.barTintColor = .clear
-        navigationController?.navigationBar.tintColor = milkWhite
-        navigationController?.navigationBar.shadowImage = UIImage()
-        navigationController?.navigationBar.setBackgroundImage(UIImage(), for: UIBarMetrics.default)
+//        navigationItem.leftBarButtonItem = UIBarButtonItem(customView: profileButton)
+//        navigationController?.navigationBar.barTintColor = .clear
+//        navigationController?.navigationBar.tintColor = .white
+//        navigationController?.navigationBar.shadowImage = UIImage()
+//        navigationController?.navigationBar.setBackgroundImage(UIImage(), for: UIBarMetrics.default)
         
     }
     
     private func setViews() {
         view.addSubview(newOrderButton)
         view.addSubview(logoImageView)
+        view.addSubview(profileButton)
+        view.addSubview(profileMenu)
         
         newOrderButton.heightAnchor.constraint(equalToConstant: 44).isActive = true
         newOrderButton.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 30).isActive = true
@@ -74,25 +87,34 @@ class MainViewController: UIViewController {
         logoImageView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor).isActive = true
         logoImageView.centerYAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerYAnchor, constant: -30).isActive = true
         
+        profileButton.heightAnchor.constraint(equalToConstant: 44).isActive = true
+        profileButton.widthAnchor.constraint(equalToConstant: 44).isActive = true
+        profileButton.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 8).isActive = true
+        profileButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 8).isActive = true
+        
+        profileMenu.frame = CGRect(x: -self.view.frame.width/2, y: 0, width: self.view.frame.width/2, height: self.view.frame.height)
     }
     //MARK:- Button Actions
     
     @objc private func newOrderButtonPressed() {
-        newOrderButton.backgroundColor = .white
-        let buildVC = BuildViewController()
-        let buildNavigationController = UINavigationController(rootViewController: buildVC)
-        buildNavigationController.modalPresentationStyle = UIModalPresentationStyle.currentContext
-        
-        buildNavigationController.navigationBar.prefersLargeTitles = true
-        buildNavigationController.navigationBar.setBackgroundImage(UIImage(), for: UIBarMetrics.default)
-        buildNavigationController.navigationBar.shadowImage = UIImage()
-        
-        present(buildNavigationController, animated: true, completion: nil)
+        let checkLocationVC = CheckLocationViewController()
+        navigationController?.pushViewController(checkLocationVC, animated: true)
     }
     
-    @objc private func newOrderButtonTouchDown() {
-        newOrderButton.backgroundColor = .gray
-       
+    @objc private func profileButtonPressed() {
+        view.addGestureRecognizer(tapGestureRecognizer)
+        UIView.animate(withDuration: 0.2) {
+            self.view.frame.origin.x = self.view.frame.width/2
+//            self.profileMenu.frame.origin.x = 0
+        }
+    }
+    
+    @objc private func dismissProfileMenu() {
+        view.removeGestureRecognizer(tapGestureRecognizer)
+        UIView.animate(withDuration: 0.2) {
+//            self.profileMenu.frame.origin.x = -self.view.frame.width/2
+            self.view.frame.origin.x = 0
+        }
     }
     
 }
