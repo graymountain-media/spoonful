@@ -10,13 +10,16 @@ import UIKit
 
 class MainViewController: UIViewController {
     
-    let profileButton: UIButton = {
+    lazy var profileButton: UIButton = {
         let button = UIButton(frame: CGRect(x: 0, y: 0, width: 39, height: 39))
         button.setImage(UIImage(named: "profile"), for: .normal)
         button.contentMode = .scaleAspectFit
         button.translatesAutoresizingMaskIntoConstraints = false
+        button.addTarget(self, action: #selector(profileButtonPressed), for: .touchUpInside)
         return button
     }()
+    
+    let profileMenu = ProfileMenuView()
     
     let logoImageView: UIImageView = {
         let imageView = UIImageView()
@@ -31,6 +34,12 @@ class MainViewController: UIViewController {
         button.setTitle("New Order", for: .normal)
         button.addTarget(self, action: #selector(newOrderButtonPressed), for: .touchUpInside)
         return button
+    }()
+    
+    lazy var tapGestureRecognizer: UITapGestureRecognizer = {
+        let recognizer = UITapGestureRecognizer()
+        recognizer.addTarget(self, action: #selector(dismissProfileMenu))
+        return recognizer
     }()
     
     //MARK:- Life Cycle
@@ -66,6 +75,7 @@ class MainViewController: UIViewController {
         view.addSubview(newOrderButton)
         view.addSubview(logoImageView)
         view.addSubview(profileButton)
+        view.addSubview(profileMenu)
         
         newOrderButton.heightAnchor.constraint(equalToConstant: 44).isActive = true
         newOrderButton.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 30).isActive = true
@@ -82,12 +92,29 @@ class MainViewController: UIViewController {
         profileButton.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 8).isActive = true
         profileButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 8).isActive = true
         
+        profileMenu.frame = CGRect(x: -self.view.frame.width/2, y: 0, width: self.view.frame.width/2, height: self.view.frame.height)
     }
     //MARK:- Button Actions
     
     @objc private func newOrderButtonPressed() {
         let checkLocationVC = CheckLocationViewController()
         navigationController?.pushViewController(checkLocationVC, animated: true)
+    }
+    
+    @objc private func profileButtonPressed() {
+        view.addGestureRecognizer(tapGestureRecognizer)
+        UIView.animate(withDuration: 0.2) {
+            self.view.frame.origin.x = self.view.frame.width/2
+//            self.profileMenu.frame.origin.x = 0
+        }
+    }
+    
+    @objc private func dismissProfileMenu() {
+        view.removeGestureRecognizer(tapGestureRecognizer)
+        UIView.animate(withDuration: 0.2) {
+//            self.profileMenu.frame.origin.x = -self.view.frame.width/2
+            self.view.frame.origin.x = 0
+        }
     }
     
 }

@@ -9,15 +9,17 @@
 import Foundation
 
 class Order {
-    let bowl: Bowl
     let cereals: [Cereal]
     let milk: Milk
     let total: Int
+    let id: UUID
+    let location: String
     
-    init(bowl: Bowl, cereals: [Cereal], milk: Milk) {
-        self.bowl = bowl
+    init(cereals: [Cereal], milk: Milk, location: String) {
         self.cereals = cereals
         self.milk = milk
         self.total = 500
+        self.id = UUID()
+        self.location = location
     }
 }

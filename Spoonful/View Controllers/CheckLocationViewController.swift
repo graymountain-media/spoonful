@@ -17,6 +17,7 @@ class CheckLocationViewController: UIViewController {
     var universityCoordinates: [CLLocationCoordinate2D] = []
     var polygonPoints: [CGPoint] = []
     var userLocation: CGPoint?
+    let testUserLocation = CGPoint(x: 40.767344, y: -111.840000)
     
     let mapView: MKMapView = {
         let view = MKMapView()
@@ -170,7 +171,7 @@ class CheckLocationViewController: UIViewController {
     @objc private func checkLocationButtonPressed(){
         
         if let userLocation = userLocation {
-            if boundariesContain(point: userLocation) {
+            if boundariesContain(point: testUserLocation) {
                 navigationController?.pushViewController(NewOrderViewController(), animated: true)
             } else {
                 let alert = UIAlertController(title: "Cannot Deliver to Your Location", message: "We're sorry, we are currently only delivering to the University of Utah campus", preferredStyle: .alert)

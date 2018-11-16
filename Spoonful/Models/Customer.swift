@@ -10,8 +10,14 @@ import Foundation
 
 class Customer {
     let id: String
+    let firstName: String
+    let lastName: String
+    let phoneNumber: String
     
-    init(id: String) {
+    init(id: String, firstName: String, lastName: String, phoneNumber: String) {
         self.id = id
+        self.firstName = firstName
+        self.lastName = lastName
+        self.phoneNumber = phoneNumber
     }
 }

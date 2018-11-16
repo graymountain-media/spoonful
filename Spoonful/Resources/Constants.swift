@@ -17,6 +17,8 @@ let lightOne = UIColor(red: 23/255, green: 203/255, blue: 245/255, alpha: 1)
 let lightTwo = UIColor(red: 46/255, green: 208/255, blue: 246/255, alpha: 1)
 let offWhite = UIColor(red: 244/255, green: 244/255, blue: 244/255, alpha: 1)
 
+let titleFont = UIFont(name: "PeaceSans", size: 24)!
+
 let checkoutGreen = UIColor(red: 0, green: 244/255, blue: 46/255, alpha: 1)
 
 //MARK:- Stripe

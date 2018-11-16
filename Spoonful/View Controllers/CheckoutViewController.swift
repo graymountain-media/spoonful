@@ -144,13 +144,7 @@ class CheckoutViewController: UIViewController {
             orderStackView.translatesAutoresizingMaskIntoConstraints = false
             
             orderCerealImageViewTop.image = order.cereals[0].image
-            
-            if order.bowl.size == .small {
-                orderBowlImageView.image = UIImage(named: "bowl-filled")
-            } else {
-                orderBowlImageView.image = UIImage(named: "bowl-filled")
-            }
-            
+            orderBowlImageView.image = UIImage(named: "bowl-filled")
             if order.cereals.count == 2 {
                 orderStackView.insertArrangedSubview(orderCerealImageViewBottom, at: 2)
                 orderCerealImageViewBottom.image = order.cereals[1].image

@@ -39,5 +39,9 @@
 	</array>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>We need to verify that you are on campus before placing an order.</string>
+	<key>UIAppFonts</key>
+	<array>
+		<string>peace_sans.otf</string>
+	</array>
 </dict>
 </plist>
