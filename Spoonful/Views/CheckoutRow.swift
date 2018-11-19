@@ -12,16 +12,16 @@ class CheckoutRow: UIView {
 
     let titleLabel: UILabel = {
         let label = UILabel()
-        label.text = "Payment"
+        label.text = "PAYMENT"
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.font = UIFont.systemFont(ofSize: 24)
+        label.font = titleFont.withSize(24)
         label.textColor = .white
         label.textAlignment = .left
         return label
     }()
     
     let activityIndicator: UIActivityIndicatorView = {
-        let indicator = UIActivityIndicatorView(style: .gray)
+        let indicator = UIActivityIndicatorView(style: .white)
         indicator.hidesWhenStopped = true
         indicator.translatesAutoresizingMaskIntoConstraints = false
         return indicator
@@ -31,7 +31,7 @@ class CheckoutRow: UIView {
         let label = UILabel()
         label.text = ""
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.font = UIFont.boldSystemFont(ofSize: 24)
+        label.font = titleFont.withSize(24)
         label.textColor = .white
         label.textAlignment = .right
         return label
@@ -76,7 +76,7 @@ class CheckoutRow: UIView {
     
     var title: String = "Payment" {
         didSet{
-            titleLabel.text = title
+            titleLabel.text = title.uppercased()
         }
     }
     
@@ -86,7 +86,7 @@ class CheckoutRow: UIView {
         }
     }
     
-    convenience init(title: String, detail: String, tappable: Bool = true, frame: CGRect) {
+    convenience init(title: String, detail: String, tappable: Bool = true, frame: CGRect = CGRect.zero) {
         self.init(frame: frame)
         
         self.title = title

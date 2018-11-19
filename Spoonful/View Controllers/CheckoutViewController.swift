@@ -22,15 +22,16 @@ class CheckoutViewController: UIViewController {
     let yourOrderLabel: UILabel = {
         let label = UILabel()
         label.textColor = .white
-        label.font = UIFont.systemFont(ofSize: 16, weight: .bold)
+        label.font = titleFont.withSize(16)
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "Your Order"
+        label.text = "YOUR ORDER"
+        label.backgroundColor = darkOne
         return label
     }()
     
     let orderView: UIView = {
         let view = UIView()
-        view.backgroundColor = lightOne
+        view.backgroundColor = darkOne
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
@@ -42,14 +43,14 @@ class CheckoutViewController: UIViewController {
         return imageView
     }()
     
-    let orderCerealImageViewTop: UIImageView = {
+    let orderFirstCerealImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.contentMode = .scaleAspectFit
         return imageView
     }()
     
-    let orderCerealImageViewBottom: UIImageView = {
+    let orderSecondCerealImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.contentMode = .scaleAspectFit
@@ -63,19 +64,30 @@ class CheckoutViewController: UIViewController {
         return imageView
     }()
     
+    //MARK: Rows
+    
     let totalView: CheckoutRow = {
-        let view = CheckoutRow(title: "Total", detail: "$0.00", tappable: false, frame: CGRect.zero)
+        let view = CheckoutRow(title: "TOTAL", detail: "$0.00", tappable: false, frame: CGRect.zero)
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
         
     }()
     
     let paymentView: CheckoutRow = {
-        let view = CheckoutRow(title: "Payment", detail: "", frame: CGRect.zero)
+        let view = CheckoutRow(title: "PAYMENT", detail: "", frame: CGRect.zero)
         view.backgroundColor = .clear
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
+    
+    let contactInfoView: CheckoutRow = {
+        let view = CheckoutRow(title: "Contact Info", detail: ">")
+        view.backgroundColor = .clear
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
+   
     
     lazy var completeButton: SpoonfulButton = {
         let button = SpoonfulButton()
@@ -95,7 +107,7 @@ class CheckoutViewController: UIViewController {
         // Do any additional setup after loading the view.
 
         setupOrderView()
-        setupCheckoutRows()
+        setupRows()
         setupCompleteButton()
     }
     
@@ -137,17 +149,17 @@ class CheckoutViewController: UIViewController {
         
         if let order = order {
             
-            let orderStackView = UIStackView(arrangedSubviews: [orderBowlImageView,orderCerealImageViewTop,orderMilkImageView])
+            let orderStackView = UIStackView(arrangedSubviews: [orderBowlImageView,orderFirstCerealImageView,orderMilkImageView])
             orderStackView.axis = .horizontal
             orderStackView.spacing = 4
             orderStackView.distribution = .fillEqually
             orderStackView.translatesAutoresizingMaskIntoConstraints = false
             
-            orderCerealImageViewTop.image = order.cereals[0].image
+            orderFirstCerealImageView.image = order.cereals[0].image
             orderBowlImageView.image = UIImage(named: "bowl-filled")
             if order.cereals.count == 2 {
-                orderStackView.insertArrangedSubview(orderCerealImageViewBottom, at: 2)
-                orderCerealImageViewBottom.image = order.cereals[1].image
+                orderStackView.insertArrangedSubview(orderSecondCerealImageView, at: 2)
+                orderSecondCerealImageView.image = order.cereals[1].image
             }
             
             orderMilkImageView.image = UIImage(named: "mockMilk")
@@ -167,22 +179,37 @@ class CheckoutViewController: UIViewController {
         }
     }
     
-    private func setupCheckoutRows() {
+    private func setupRows() {
         view.addSubview(totalView)
         view.addSubview(paymentView)
+        view.addSubview(contactInfoView)
+        
 //        totalView.frame = CGRect(x: 0, y: 300, width: view.frame.width, height: 50)
         totalView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor).isActive = true
         totalView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor).isActive = true
         totalView.topAnchor.constraint(equalTo: orderView.bottomAnchor).isActive = true
         totalView.heightAnchor.constraint(equalToConstant: 50).isActive = true
         
+        
+        contactInfoView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor).isActive = true
+        contactInfoView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor).isActive = true
+        contactInfoView.topAnchor.constraint(equalTo: totalView.bottomAnchor, constant: 16).isActive = true
+        contactInfoView.heightAnchor.constraint(equalToConstant: 50).isActive = true
+        
+        
         paymentView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor).isActive = true
         paymentView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor).isActive = true
-        paymentView.topAnchor.constraint(equalTo: totalView.bottomAnchor, constant: 16).isActive = true
+        paymentView.topAnchor.constraint(equalTo: contactInfoView.bottomAnchor, constant: 16).isActive = true
         paymentView.heightAnchor.constraint(equalToConstant: 50).isActive = true
         
         paymentView.onTap = { [weak self] in
             self?.paymentContext.pushPaymentMethodsViewController()
+        }
+        
+        contactInfoView.onTap = {[weak self] in
+            let contactVC = ContactInfoTableViewController()
+            contactVC.delegate = self
+            self?.navigationController?.pushViewController(contactVC, animated: true)
         }
     }
     
@@ -260,4 +287,19 @@ extension CheckoutViewController: STPPaymentContextDelegate {
     }
     
 
+}
+
+extension CheckoutViewController: ContactInfoDelegate {
+    func contactInfoEntered(firstName: String, lastName: String, phoneNumber: String) {
+        guard let order = order else {
+            print("No order on return from contact info")
+            return
+        }
+        
+        order.firstName = firstName
+        order.lastName = lastName
+        order.phoneNumber = phoneNumber
+    }
+    
+    
 }

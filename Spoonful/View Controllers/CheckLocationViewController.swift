@@ -172,7 +172,8 @@ class CheckLocationViewController: UIViewController {
         
         if let userLocation = userLocation {
             if boundariesContain(point: testUserLocation) {
-                navigationController?.pushViewController(NewOrderViewController(), animated: true)
+                let newOrderVC = NewOrderViewController()
+                navigationController?.pushViewController(newOrderVC, animated: true)
             } else {
                 let alert = UIAlertController(title: "Cannot Deliver to Your Location", message: "We're sorry, we are currently only delivering to the University of Utah campus", preferredStyle: .alert)
                 

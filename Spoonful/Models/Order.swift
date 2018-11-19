@@ -14,12 +14,18 @@ class Order {
     let total: Int
     let id: UUID
     let location: String
+    var firstName: String
+    var lastName: String
+    var phoneNumber: String
     
-    init(cereals: [Cereal], milk: Milk, location: String) {
+    init(cereals: [Cereal], milk: Milk, location: String, firstName: String = "", lastName: String = "", phoneNumber: String = "") {
         self.cereals = cereals
         self.milk = milk
         self.total = 500
         self.id = UUID()
         self.location = location
+        self.firstName = firstName
+        self.lastName = lastName
+        self.phoneNumber = phoneNumber
     }
 }

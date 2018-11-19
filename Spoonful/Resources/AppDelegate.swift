@@ -40,10 +40,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     private func setupStripe() {
         
         config.publishableKey = stripePublishableKey
-        config.appleMerchantIdentifier = appleMerchantID
+//        config.appleMerchantIdentifier = appleMerchantID
         config.companyName = companyName
         config.requiredBillingAddressFields = .full
-        config.additionalPaymentMethods = .applePay
+//        config.additionalPaymentMethods = .applePay
         
         // Create card sources instead of card tokens
         config.createCardSources = true;

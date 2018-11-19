@@ -26,6 +26,6 @@ let checkoutGreen = UIColor(red: 0, green: 244/255, blue: 46/255, alpha: 1)
 //let baseURL = URL(string: "http://localhost:3003")
 let baseURL = URL(string: "https://spoonful-app.herokuapp.com")
 let stripePublishableKey = "pk_test_MKeRf4JsaxmdN5LSbSmIBff2"
-let appleMerchantID = "merchant.com.Spoonful"
+//let appleMerchantID = "merchant.com.Spoonful"
 let companyName = "Spoonful"
 
