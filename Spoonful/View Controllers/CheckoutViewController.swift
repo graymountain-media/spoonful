@@ -82,12 +82,11 @@ class CheckoutViewController: UIViewController {
     
     let contactInfoView: CheckoutRow = {
         let view = CheckoutRow(title: "Contact Info", detail: ">")
+        view.detailLabel.font = UIFont.systemFont(ofSize: 28)
         view.backgroundColor = .clear
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
-    
-   
     
     lazy var completeButton: SpoonfulButton = {
         let button = SpoonfulButton()

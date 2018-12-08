@@ -65,7 +65,17 @@ class ContactInfoTableViewController: UITableViewController {
         
         
         setupRows()
+        
+        view.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard)))
     }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        firstNameRow.textField.becomeFirstResponder()
+    }
+    
+    //MARK:- View Setup
     
     private func setupRows() {
         
@@ -144,6 +154,8 @@ class ContactInfoTableViewController: UITableViewController {
         return 4
     }
     
+    //MARK:- Actions
+    
     @objc private func saveButtonPressed(){
         firstNameRow.isInvalid = false
         lastNameRow.isInvalid = false
@@ -174,6 +186,10 @@ class ContactInfoTableViewController: UITableViewController {
         view.endEditing(true)
         delegate?.contactInfoEntered(firstName: firstName, lastName: lastName, phoneNumber: phoneNumber)
         navigationController?.popViewController(animated: true)
+    }
+    
+    @objc private func dismissKeyboard() {
+        view.endEditing(true)
     }
 }
 

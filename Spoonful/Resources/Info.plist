@@ -43,5 +43,20 @@
 	<array>
 		<string>peace_sans.otf</string>
 	</array>
+    
+    
+    <key>CFBundleURLTypes</key>
+    <array>
+        <dict>
+            <key>CFBundleURLSchemes</key>
+            <array>
+                <string>fb503052620197798</string>
+            </array>
+        </dict>
+    </array>
+    <key>FacebookAppID</key>
+    <string>503052620197798</string>
+    <key>FacebookDisplayName</key>
+    <string>Spoonful</string>
 </dict>
 </plist>

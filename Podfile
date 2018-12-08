@@ -8,6 +8,7 @@ target 'Spoonful' do
   # Pods for Spoonful
   pod 'Stripe'
   pod 'Alamofire'
+  pod 'Firebase/Core'
 
   target 'SpoonfulTests' do
     inherit! :search_paths

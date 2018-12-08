@@ -13,8 +13,8 @@ class ProfileMenuView: UIView {
     let title: UILabel = {
         let label = UILabel()
         label.text = "Spoonful"
-        label.font = UIFont.systemFont(ofSize: 24, weight: .heavy)
-        label.textColor = main
+        label.font = titleFont.withSize(28)
+        label.textColor = .black
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -23,24 +23,25 @@ class ProfileMenuView: UIView {
         let label = UILabel()
         label.text = "Log in to Spoonful"
         label.font = UIFont.systemFont(ofSize: 12, weight: .light)
-        label.textColor = main
+        label.textColor = .white
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
     
-//    let loginButton: ProfileMenuButton = {
-//        let button = ProfileMenuButton()
-//        button.titleLabel?.text = "Login"
-//        button.imageView?.image = UIImage(named: "profile")
-//        return button
-//    }()
+    let tableView: UITableView = {
+        let table = UITableView()
+        table.backgroundColor = lightTwo
+        table.separatorStyle = .none
+        table.translatesAutoresizingMaskIntoConstraints = false
+        return table
+    }()
     
     override init(frame: CGRect) {
         super.init(frame: frame)
         self.addSubview(title)
         self.addSubview(subtitle)
-//        self.addSubview(loginButton)
-        self.backgroundColor = offWhite
+        self.addSubview(tableView)
+        self.backgroundColor = darkOne
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -56,10 +57,10 @@ class ProfileMenuView: UIView {
         subtitle.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 8).isActive = true
         subtitle.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -8).isActive = true
         
-//        loginButton.topAnchor.constraint(equalTo: subtitle.bottomAnchor, constant: 8).isActive = true
-//        loginButton.leadingAnchor.constraint(equalTo: self.leadingAnchor).isActive = true
-//        loginButton.trailingAnchor.constraint(equalTo: self.trailingAnchor).isActive = true
-//        loginButton.heightAnchor.constraint(equalToConstant: 50).isActive = true
+        tableView.topAnchor.constraint(equalTo: subtitle.bottomAnchor, constant: 8).isActive = true
+        tableView.leadingAnchor.constraint(equalTo: self.leadingAnchor).isActive = true
+        tableView.trailingAnchor.constraint(equalTo: self.trailingAnchor).isActive = true
+        tableView.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -32).isActive = true
     }
 
 }

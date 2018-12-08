@@ -10,6 +10,8 @@ import UIKit
 
 class MainViewController: UIViewController {
     
+    let profileCellId = "ProfileCell"
+    
     lazy var profileButton: UIButton = {
         let button = UIButton(frame: CGRect(x: 0, y: 0, width: 39, height: 39))
         button.setImage(UIImage(named: "profile"), for: .normal)
@@ -49,8 +51,10 @@ class MainViewController: UIViewController {
        
         view.backgroundColor = main
         
+        profileMenu.tableView.delegate = self
+        profileMenu.tableView.dataSource = self
+        profileMenu.tableView.register(UITableViewCell.self, forCellReuseIdentifier: profileCellId)
         
-        setNavigationBar()
         setViews()
     }
     
@@ -61,15 +65,6 @@ class MainViewController: UIViewController {
 
     
     //MARK:- Private Methods
-    
-    private func setNavigationBar() {
-//        navigationItem.leftBarButtonItem = UIBarButtonItem(customView: profileButton)
-//        navigationController?.navigationBar.barTintColor = .clear
-//        navigationController?.navigationBar.tintColor = .white
-//        navigationController?.navigationBar.shadowImage = UIImage()
-//        navigationController?.navigationBar.setBackgroundImage(UIImage(), for: UIBarMetrics.default)
-        
-    }
     
     private func setViews() {
         view.addSubview(newOrderButton)
@@ -117,5 +112,22 @@ class MainViewController: UIViewController {
         }
     }
     
+}
+
+extension MainViewController: UITableViewDelegate, UITableViewDataSource {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return 1
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: profileCellId, for: indexPath)
+        
+        cell.textLabel?.text = "Login"
+        cell.imageView?.image = UIImage(named: "profile")
+        cell.textLabel?.textColor = .white
+        cell.backgroundColor = lightTwo
+        
+        return cell
+    }
 }
 
