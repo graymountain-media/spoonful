@@ -19,11 +19,14 @@ class CerealCollectionViewCell: UICollectionViewCell {
     
     let title: UILabel = {
         let label = UILabel()
-        label.textColor = .white
-        label.font = UIFont.systemFont(ofSize: 15)
+        label.textColor = .black
+        label.font = UIFont.systemFont(ofSize: 11)
         label.translatesAutoresizingMaskIntoConstraints = false
         label.textAlignment = .center
         label.numberOfLines = 0
+        label.backgroundColor = .green
+        label.layer.borderColor = UIColor.white.cgColor
+        label.layer.borderWidth = 1
         return label
     }()
     
@@ -32,14 +35,14 @@ class CerealCollectionViewCell: UICollectionViewCell {
         self.addSubview(imageView)
         self.addSubview(title)
         
-        title.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 4).isActive = true
-        title.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -4).isActive = true
-        title.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -8).isActive = true
+        title.leadingAnchor.constraint(equalTo: self.leadingAnchor).isActive = true
+        title.trailingAnchor.constraint(equalTo: self.trailingAnchor).isActive = true
+        title.bottomAnchor.constraint(equalTo: self.bottomAnchor).isActive = true
         
-        imageView.widthAnchor.constraint(equalTo: self.widthAnchor, constant: -35).isActive = true
-        imageView.heightAnchor.constraint(equalTo: self.widthAnchor, constant: -35).isActive = true
-        imageView.topAnchor.constraint(equalTo: self.topAnchor, constant: 4).isActive = true
-        imageView.centerXAnchor.constraint(equalTo: self.centerXAnchor).isActive = true
+        imageView.leadingAnchor.constraint(equalTo: self.leadingAnchor).isActive = true
+        imageView.trailingAnchor.constraint(equalTo: self.trailingAnchor).isActive = true
+        imageView.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -8).isActive = true
+        imageView.topAnchor.constraint(equalTo: self.topAnchor, constant: 8).isActive = true
     }
     
     required init?(coder aDecoder: NSCoder) {

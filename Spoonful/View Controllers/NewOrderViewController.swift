@@ -229,6 +229,7 @@ class NewOrderViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         navigationController?.isNavigationBarHidden = false
+        CheckLocationManager.shared.locationManager.stopUpdatingLocation()
     }
 
     //MARK:- Private Methods
@@ -461,10 +462,10 @@ class NewOrderViewController: UIViewController {
         }
         
         //Check if cereal was already selected
-        if selectedCereals.contains(Mock.cereal[indexPath.row]) {
+        if selectedCereals.contains(Products.cereal[indexPath.row]) {
             
             //Cereal was already selected
-            if let cerealIndexToRemove = selectedCereals.firstIndex(of: Mock.cereal[indexPath.row]) {
+            if let cerealIndexToRemove = selectedCereals.firstIndex(of: Products.cereal[indexPath.row]) {
                 selectedCereals.remove(at: cerealIndexToRemove)
                 cell.layer.borderWidth = 0
                 
@@ -484,7 +485,7 @@ class NewOrderViewController: UIViewController {
             //Cereal was not already selected
             if selectedCereals.count < 2 {
                 cell.layer.borderWidth = 1
-                selectedCereals.append(Mock.cereal[indexPath.row])
+                selectedCereals.append(Products.cereal[indexPath.row])
                 if selectedCereals.count == 1 {
                     print("add first slot")
                     addFirstCereal()
@@ -509,7 +510,7 @@ class NewOrderViewController: UIViewController {
             tempCell?.layer.borderWidth = 0
         }
         cell.layer.borderWidth = 1
-        self.milk = Mock.milk[indexPath.row]
+        self.milk = Products.milk[indexPath.row]
         orderMilkSlotImageView.image = UIImage(named: "mockMilk")
         yourOrderView.addArrangedSubview(orderMilkSlotImageView)
         checkoutButton.isEnabled = true
@@ -529,9 +530,9 @@ extension NewOrderViewController: UICollectionViewDelegate, UICollectionViewData
         case quantityCollectionView:
             return 2
         case cerealCollectionView:
-            return Mock.cereal.count
+            return Products.cereal.count
         default:
-             return Mock.milk.count
+             return Products.milk.count
         }
         
     }
@@ -568,11 +569,16 @@ extension NewOrderViewController: UICollectionViewDelegate, UICollectionViewData
                 print("Error casting cereal cell")
                 return UICollectionViewCell()
             }
+            let cereal = Products.cereal[indexPath.row]
             cell.layer.borderColor = UIColor.white.cgColor
-            let name = Mock.cereal[indexPath.row].name
-            let image = Mock.cereal[indexPath.row].image
+            var name = ""
+            if cereal.extraPrice != 0.0 {
+                name += "+ $\(cereal.extraPrice)"
+            }
+            
+            let image = cereal.image
             cell.updateCell(withName: name, image: image)
-            if selectedCereals.contains(Mock.cereal[indexPath.row]){
+            if selectedCereals.contains(cereal){
                 cell.layer.borderWidth = 1
             } else {
                 cell.layer.borderWidth = 0
@@ -584,7 +590,7 @@ extension NewOrderViewController: UICollectionViewDelegate, UICollectionViewData
                 return UICollectionViewCell()
             }
             cell.layer.borderColor = UIColor.white.cgColor
-            cell.updateCell(withTitle: Mock.milk[indexPath.row].type.rawValue)
+            cell.updateCell(withTitle: Products.milk[indexPath.row].type.rawValue)
             return cell
         }
     }
@@ -598,7 +604,7 @@ extension NewOrderViewController: UICollectionViewDelegate, UICollectionViewData
             print("bowl size")
             return size
         case cerealCollectionView:
-            let size = CGSize(width: view.frame.width / 3.5, height: cerealCollectionView.frame.height * 0.48)
+            let size = CGSize(width: view.frame.width / 3.5, height: cerealCollectionView.frame.height * 0.45)
             return size
         default:
             let size = CGSize(width: view.frame.width / 3.5, height: milkCollectionView.frame.height * 0.48)

@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Firebase
 
 class MainViewController: UIViewController {
     
@@ -50,6 +51,7 @@ class MainViewController: UIViewController {
         super.viewDidLoad()
        
         view.backgroundColor = main
+        CheckLocationManager.shared.locationAuthorizationDelegate = self
         
         profileMenu.tableView.delegate = self
         profileMenu.tableView.dataSource = self
@@ -61,7 +63,7 @@ class MainViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         navigationController?.isNavigationBarHidden = true
-    }
+        CheckLocationManager.shared.locationManager.startUpdatingLocation()    }
 
     
     //MARK:- Private Methods
@@ -93,7 +95,20 @@ class MainViewController: UIViewController {
     
     @objc private func newOrderButtonPressed() {
         let checkLocationVC = CheckLocationViewController()
-        navigationController?.pushViewController(checkLocationVC, animated: true)
+        checkLocationVC.delegate = self
+        checkLocationVC.modalPresentationStyle = UIModalPresentationStyle.pageSheet
+        
+        let hasSeenLocationMessage = UserDefaults.standard.bool(forKey: "hasSeenLocationMessage")
+        
+        if hasSeenLocationMessage {
+            checkLocation()
+        } else {
+            self.present(checkLocationVC, animated: true) {
+                print("Presentation complete")
+                UserDefaults.standard.setValue(true, forKey: "hasSeenLocationMessage")
+            }
+            return 
+        }
     }
     
     @objc private func profileButtonPressed() {
@@ -110,6 +125,25 @@ class MainViewController: UIViewController {
 //            self.profileMenu.frame.origin.x = -self.view.frame.width/2
             self.view.frame.origin.x = 0
         }
+    }
+    
+    private func checkLocation() {
+        
+        var  inLocation = false
+        
+        inLocation = CheckLocationManager.shared.checkUserLocation()
+        
+        if inLocation {
+            navigationController?.pushViewController(NewOrderViewController(), animated: true)
+        } else {
+            let alert = UIAlertController(title: "Not In Delivery Area", message: "We're sorry but you are not currently in the delivery area.", preferredStyle: .alert)
+            let okayAction = UIAlertAction(title: "Okay", style: .cancel, handler: nil)
+            
+            alert.addAction(okayAction)
+            
+            present(alert, animated: true, completion: nil)
+        }
+        
     }
     
 }
@@ -131,3 +165,19 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
     }
 }
 
+extension MainViewController: CheckUserDelegate, LocationAuthorizationDelegate {
+    func presentAlert(_ alert: UIAlertController) {
+        print("I am going to present alert")
+        self.present(alert, animated: true, completion: nil)
+    }
+    
+    
+}
+
+extension MainViewController: CheckLocationViewControllerDelegate {
+    func checkLocationViewDismissed() {
+        print("dismissed")
+        checkLocation()
+    }
+    
+}

@@ -7,15 +7,16 @@
 //
 
 import UIKit
-import Stripe
+import Braintree
+import BraintreeDropIn
 
 class CheckoutViewController: UIViewController {
     
     //MARK:- Properties
     let cellIdentifier = "CheckoutCell"
     
-    let paymentContext: STPPaymentContext
     let paymentCurrency = "usd"
+    var clientToken: String = ""
     
     var order: Order?
     
@@ -108,21 +109,13 @@ class CheckoutViewController: UIViewController {
         setupOrderView()
         setupRows()
         setupCompleteButton()
+        fetchClientToken()
     }
     
-    init() {
-        
-        let customerContext = STPCustomerContext(keyProvider: StripeController.shared)
-        self.paymentContext = STPPaymentContext(customerContext: customerContext)
+    init(){
         
         super.init(nibName: nil, bundle: nil)
-        self.paymentContext.delegate = self
-        self.paymentContext.hostViewController = self
         guard let order = order else {return}
-//        let userInformation = STPUserInformation()
-//        paymentContext.prefilledInformation = userInformation
-        paymentContext.paymentAmount = order.total
-        paymentContext.paymentCurrency = self.paymentCurrency
         
         totalView.detail = "$ \(order.total/100)"
     }
@@ -202,7 +195,7 @@ class CheckoutViewController: UIViewController {
         paymentView.heightAnchor.constraint(equalToConstant: 50).isActive = true
         
         paymentView.onTap = { [weak self] in
-            self?.paymentContext.pushPaymentMethodsViewController()
+            print("payment tapped")
         }
         
         contactInfoView.onTap = {[weak self] in
@@ -221,71 +214,38 @@ class CheckoutViewController: UIViewController {
         completeButton.heightAnchor.constraint(equalToConstant: 50).isActive = true
     }
     
+    private func fetchClientToken() {
+        BraintreeController.shared.fetchClientToken(forCustomerID: "123456asda") { (token) in
+            if let token = token {
+                self.clientToken = token
+                self.completeButton.isEnabled = true
+                print("THE NEW TOKEN IS: \(token)")
+            }
+        }
+    }
+    
     //MARK:- Button Actions
     @objc private func completeButtonPressed(){
-        self.paymentContext.requestPayment()
-    }
-    
-}
-
-extension CheckoutViewController: STPPaymentContextDelegate {
-
-    
-    func paymentContext(_ paymentContext: STPPaymentContext, didFailToLoadWithError error: Error) {
-        print("didFailToLoadWithError \(error.localizedDescription)")
-    }
-    
-    func paymentContextDidChange(_ paymentContext: STPPaymentContext) {
-        print("paymentContextDidChange")
-        self.paymentView.loading = paymentContext.loading
-        if let paymentMethod = paymentContext.selectedPaymentMethod {
-            self.paymentView.detail = paymentMethod.label
-        }
-        else {
-            self.paymentView.detail = "Select Payment"
-        }
-        if paymentContext.selectedPaymentMethod != nil {
-            completeButton.isEnabled = true
-//            UIView.animate(withDuration: 0.2) {
-//                self.completeButton.isEnabled = true
-//                self.completeButton.backgroundColor = .green
-//                self.completeButton.alpha = 1
-//            }
-        } else {
-            completeButton.isEnabled = false
-//            UIView.animate(withDuration: 0.2) {
-//                self.completeButton.isEnabled = false
-//                self.completeButton.backgroundColor = .gray
-//                self.completeButton.alpha = 0.5
-//            }
-        }
-        
-    }
-    
-    func paymentContext(_ paymentContext: STPPaymentContext, didCreatePaymentResult paymentResult: STPPaymentResult, completion: @escaping STPErrorBlock) {
-        print("didCreatePaymentResult")
-        guard let order = order else {return}
-        StripeController.shared.completeCharge(paymentResult, amount: order.total, completion: { (error: Error?) in
-            if let error = error {
-                completion(error)
-            } else {
-                completion(nil)
+//        self.paymentContext.requestPayment()
+        let request =  BTDropInRequest()
+        let dropIn = BTDropInController(authorization: "sandbox_xswpggg8_k2z7jdk8znqf6y3p", request: request)
+        { (controller, result, error) in
+            if (error != nil) {
+                print("ERROR")
+            } else if (result?.isCancelled == true) {
+                print("CANCELLED")
+            } else if let result = result {
+                // Use the BTDropInResult properties to update your UI
+                // result.paymentOptionType
+                // result.paymentMethod
+                // result.paymentIcon
+                // result.paymentDescription
             }
-        })
-        
-    }
-    
-    func paymentContext(_ paymentContext: STPPaymentContext, didFinishWith status: STPPaymentStatus, error: Error?) {
-        print("didFinishWith")
-        
-        if let error = error {
-            print("Error with charge: \(error.localizedDescription )")
-        } else {
-            navigationController?.pushViewController(OrderCompleteViewController(), animated: true)
+            controller.dismiss(animated: true, completion: nil)
         }
+        self.present(dropIn!, animated: true, completion: nil)
     }
     
-
 }
 
 extension CheckoutViewController: ContactInfoDelegate {

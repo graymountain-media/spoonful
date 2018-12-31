@@ -10,6 +10,10 @@ import UIKit
 import MapKit
 import CoreLocation
 
+protocol CheckLocationViewControllerDelegate: class {
+    func checkLocationViewDismissed()
+}
+
 class CheckLocationViewController: UIViewController {
     
     let locationManager = CLLocationManager()
@@ -18,6 +22,8 @@ class CheckLocationViewController: UIViewController {
     var polygonPoints: [CGPoint] = []
     var userLocation: CGPoint?
     let testUserLocation = CGPoint(x: 40.767344, y: -111.840000)
+    
+    weak var delegate: CheckLocationViewControllerDelegate?
     
     let mapView: MKMapView = {
         let view = MKMapView()
@@ -52,10 +58,11 @@ class CheckLocationViewController: UIViewController {
         
         view.backgroundColor = main
         
+//        CheckLocationManager.shared.locationAuthorizationDelegate = self
+//        CheckLocationManager.shared.checkLocationServices()
+        
         setupViews()
         setMapPolygon()
-        setupLocationManager()
-        checkLocationAuthorization()
     }
     
     //MARK:- View Setup
@@ -85,7 +92,7 @@ class CheckLocationViewController: UIViewController {
         mapView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor).isActive = true
         mapView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor).isActive = true
     }
-    
+
     private func setMapPolygon(){
         for coordinate in rawCoordinates {
             let new2DCoordinate = CLLocationCoordinate2D(latitude: coordinate[0], longitude: coordinate[1])
@@ -97,93 +104,12 @@ class CheckLocationViewController: UIViewController {
         mapView.addOverlay(polygon)
     }
     
-    //MARK:- Location Manager and Location Services
-    
-    private func setupLocationManager(){
-        locationManager.delegate = self
-        locationManager.desiredAccuracy = kCLLocationAccuracyBest
-    }
-    
-    private func checkLocationServices() {
-        if CLLocationManager.locationServicesEnabled() {
-            setupLocationManager()
-            checkLocationAuthorization()
-        } else {
-            let alert = UIAlertController(title: "Location Services Disabled", message: "Location Services have are not enabled on this device. Please go to Settings > Privacy > Location Services to enable Location Services.", preferredStyle: .alert)
-            
-            let okayAction = UIAlertAction(title: "Okay", style: .cancel, handler: nil)
-            
-            alert.addAction(okayAction)
-            
-            present(alert, animated: true, completion: nil)
-        }
-    }
-    
-    private func checkLocationAuthorization(){
-        switch CLLocationManager.authorizationStatus(){
-        case .authorizedWhenInUse:
-            locationManager.startUpdatingLocation()
-            break
-        case .denied:
-            let alert = UIAlertController(title: "Location Services Denied", message: "To be able to take your order, we must ensure you are on campus. Please go to Settings > Privacy > Location Services to enable Location Services for Spoonful.", preferredStyle: .alert)
-            
-            let okayAction = UIAlertAction(title: "Okay", style: .cancel, handler: nil)
-            
-            alert.addAction(okayAction)
-            
-            present(alert, animated: true, completion: nil)
-            break
-        case .notDetermined:
-            locationManager.requestWhenInUseAuthorization()
-            break
-        case .restricted:
-            let alert = UIAlertController(title: "Location Services Restricted", message: "Loaction Services have been restricted on this device, and must be enabled before using Spoonful.", preferredStyle: .alert)
-            
-            let okayAction = UIAlertAction(title: "Close", style: .cancel, handler: nil)
-            
-            alert.addAction(okayAction)
-            
-            present(alert, animated: true, completion: nil)
-            break
-        case .authorizedAlways:
-            locationManager.startUpdatingLocation()
-            break
-        }
-    }
-    
-    func boundariesContain(point: CGPoint) -> Bool {
-        let path = UIBezierPath()
-        let firstPoint = polygonPoints[0] as CGPoint
-        
-        path.move(to: firstPoint)
-        
-        for index in 1...polygonPoints.count-1 {
-            path.addLine(to: polygonPoints[index] as CGPoint)
-        }
-        
-        path.close()
-        print("Contains: \(path.contains(point))")
-        return path.contains(point)
-    }
     
     //MARK:- Button Action
     
     @objc private func checkLocationButtonPressed(){
-        
-        if let userLocation = userLocation {
-            if boundariesContain(point: testUserLocation) {
-                let newOrderVC = NewOrderViewController()
-                navigationController?.pushViewController(newOrderVC, animated: true)
-            } else {
-                let alert = UIAlertController(title: "Cannot Deliver to Your Location", message: "We're sorry, we are currently only delivering to the University of Utah campus", preferredStyle: .alert)
-                
-                let okayAction = UIAlertAction(title: "Okay", style: .cancel) { (_) in
-                    self.navigationController?.popViewController(animated: true)
-                }
-                alert.addAction(okayAction)
-                
-                present(alert, animated: true, completion: nil)
-            }
+        self.dismiss(animated: true) {
+            self.delegate?.checkLocationViewDismissed()
         }
     }
 
@@ -209,6 +135,15 @@ extension CheckLocationViewController: CLLocationManagerDelegate {
     }
     
     func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
-        checkLocationAuthorization()
+//        checkLocationAuthorization()
     }
+}
+
+extension CheckLocationViewController: LocationAuthorizationDelegate {
+    func presentAlert(_ alert: UIAlertController) {
+        print("I am going to present alert")
+        self.present(alert, animated: true, completion: nil)
+    }
+    
+    
 }

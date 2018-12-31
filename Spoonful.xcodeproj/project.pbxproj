@@ -16,11 +16,13 @@
 		A11A7130215C260600602B52 /* SpoonfulUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A11A712F215C260600602B52 /* SpoonfulUITests.swift */; };
 		A11A713F215C26B600602B52 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A11A713E215C26B600602B52 /* AppDelegate.swift */; };
 		A11A7141215C26EA00602B52 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = A11A7140215C26EA00602B52 /* Constants.swift */; };
+		A1224EB321CDA8EE003423B4 /* CheckLocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1224EB221CDA8EE003423B4 /* CheckLocationManager.swift */; };
 		A1237FE2218E20460099173F /* CheckoutRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1237FE1218E20460099173F /* CheckoutRow.swift */; };
 		A1253280217F831A0077E2E2 /* NewOrderViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A125327F217F831A0077E2E2 /* NewOrderViewController.swift */; };
-		A1253282217F85BC0077E2E2 /* StripeController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1253281217F85BC0077E2E2 /* StripeController.swift */; };
+		A1253282217F85BC0077E2E2 /* BraintreeController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1253281217F85BC0077E2E2 /* BraintreeController.swift */; };
 		A1253284217F88470077E2E2 /* CustomerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1253283217F88470077E2E2 /* CustomerController.swift */; };
 		A1253286217F8C100077E2E2 /* CheckoutViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1253285217F8C100077E2E2 /* CheckoutViewController.swift */; };
+		A126B0BD21DAB26E00286CD7 /* LogInViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A126B0BC21DAB26E00286CD7 /* LogInViewController.swift */; };
 		A1283B15217E5D4A004A8A3C /* Customer.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1283B14217E5D4A004A8A3C /* Customer.swift */; };
 		A152F16F2193787900B2EBC1 /* HighlightButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = A152F16E2193787900B2EBC1 /* HighlightButton.swift */; };
 		A152F1712195226400B2EBC1 /* OrderCompleteViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A152F1702195226400B2EBC1 /* OrderCompleteViewController.swift */; };
@@ -34,6 +36,7 @@
 		A152F187219F3D3100B2EBC1 /* peace_sans.otf in Resources */ = {isa = PBXBuildFile; fileRef = A152F184219F3D2200B2EBC1 /* peace_sans.otf */; };
 		A16A8513219F70CA000FE684 /* UserInputRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = A16A8512219F70CA000FE684 /* UserInputRow.swift */; };
 		A16A8515219F7F46000FE684 /* ContactInfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A16A8514219F7F46000FE684 /* ContactInfoViewController.swift */; };
+		A16C5D1721C5A4E30053AA1E /* Products.swift in Sources */ = {isa = PBXBuildFile; fileRef = A16C5D1621C5A4E30053AA1E /* Products.swift */; };
 		A19930D821A35296004B632E /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = A19930D721A35296004B632E /* GoogleService-Info.plist */; };
 		A1A7912321841E590012A4C3 /* Order.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1A7912221841E590012A4C3 /* Order.swift */; };
 		A1A791272184252A0012A4C3 /* Cereal.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1A791262184252A0012A4C3 /* Cereal.swift */; };
@@ -85,11 +88,13 @@
 		A11A7131215C260600602B52 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		A11A713E215C26B600602B52 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		A11A7140215C26EA00602B52 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
+		A1224EB221CDA8EE003423B4 /* CheckLocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckLocationManager.swift; sourceTree = "<group>"; };
 		A1237FE1218E20460099173F /* CheckoutRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckoutRow.swift; sourceTree = "<group>"; };
 		A125327F217F831A0077E2E2 /* NewOrderViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NewOrderViewController.swift; sourceTree = "<group>"; };
-		A1253281217F85BC0077E2E2 /* StripeController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StripeController.swift; sourceTree = "<group>"; };
+		A1253281217F85BC0077E2E2 /* BraintreeController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BraintreeController.swift; sourceTree = "<group>"; };
 		A1253283217F88470077E2E2 /* CustomerController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomerController.swift; sourceTree = "<group>"; };
 		A1253285217F8C100077E2E2 /* CheckoutViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckoutViewController.swift; sourceTree = "<group>"; };
+		A126B0BC21DAB26E00286CD7 /* LogInViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogInViewController.swift; sourceTree = "<group>"; };
 		A1283B14217E5D4A004A8A3C /* Customer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Customer.swift; sourceTree = "<group>"; };
 		A14550AF216BDD1E000F7673 /* Spoonful.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Spoonful.entitlements; sourceTree = "<group>"; };
 		A152F16E2193787900B2EBC1 /* HighlightButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HighlightButton.swift; sourceTree = "<group>"; };
@@ -102,6 +107,7 @@
 		A152F184219F3D2200B2EBC1 /* peace_sans.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = peace_sans.otf; sourceTree = "<group>"; };
 		A16A8512219F70CA000FE684 /* UserInputRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserInputRow.swift; sourceTree = "<group>"; };
 		A16A8514219F7F46000FE684 /* ContactInfoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactInfoViewController.swift; sourceTree = "<group>"; };
+		A16C5D1621C5A4E30053AA1E /* Products.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Products.swift; sourceTree = "<group>"; };
 		A19930D721A35296004B632E /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		A1A7912221841E590012A4C3 /* Order.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Order.swift; sourceTree = "<group>"; };
 		A1A791262184252A0012A4C3 /* Cereal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Cereal.swift; sourceTree = "<group>"; };
@@ -193,7 +199,8 @@
 				A11F79A4215EB4BE00B336EF /* Views */,
 				A1253287217F96880077E2E2 /* Model Controllers */,
 				A1283B16217E5D7F004A8A3C /* Models */,
-				A1253281217F85BC0077E2E2 /* StripeController.swift */,
+				A1253281217F85BC0077E2E2 /* BraintreeController.swift */,
+				A1224EB221CDA8EE003423B4 /* CheckLocationManager.swift */,
 				A11A713D215C26A100602B52 /* Resources */,
 			);
 			path = Spoonful;
@@ -230,6 +237,7 @@
 				A1A791322187D4F20012A4C3 /* Mock.swift */,
 				A1D261D321A33DC200FF4620 /* Extensions.swift */,
 				A19930D721A35296004B632E /* GoogleService-Info.plist */,
+				A16C5D1621C5A4E30053AA1E /* Products.swift */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -250,6 +258,7 @@
 			isa = PBXGroup;
 			children = (
 				A11A7111215C260400602B52 /* MainViewController.swift */,
+				A126B0BC21DAB26E00286CD7 /* LogInViewController.swift */,
 				A152F17221952F2700B2EBC1 /* CheckLocationViewController.swift */,
 				A125327F217F831A0077E2E2 /* NewOrderViewController.swift */,
 				A1253285217F8C100077E2E2 /* CheckoutViewController.swift */,
@@ -484,15 +493,21 @@
 			inputPaths = (
 				"${SRCROOT}/Pods/Target Support Files/Pods-Spoonful/Pods-Spoonful-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/Alamofire/Alamofire.framework",
+				"${BUILT_PRODUCTS_DIR}/Braintree/Braintree.framework",
+				"${BUILT_PRODUCTS_DIR}/BraintreeDropIn/BraintreeDropIn.framework",
+				"${BUILT_PRODUCTS_DIR}/GTMSessionFetcher/GTMSessionFetcher.framework",
 				"${BUILT_PRODUCTS_DIR}/GoogleUtilities/GoogleUtilities.framework",
-				"${BUILT_PRODUCTS_DIR}/Stripe/Stripe.framework",
+				"${BUILT_PRODUCTS_DIR}/leveldb-library/leveldb.framework",
 				"${BUILT_PRODUCTS_DIR}/nanopb/nanopb.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Alamofire.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Braintree.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/BraintreeDropIn.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GTMSessionFetcher.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GoogleUtilities.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Stripe.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/leveldb.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/nanopb.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -551,6 +566,7 @@
 				A16A8515219F7F46000FE684 /* ContactInfoViewController.swift in Sources */,
 				A1A7912321841E590012A4C3 /* Order.swift in Sources */,
 				A1237FE2218E20460099173F /* CheckoutRow.swift in Sources */,
+				A126B0BD21DAB26E00286CD7 /* LogInViewController.swift in Sources */,
 				A1A791332187D4F20012A4C3 /* Mock.swift in Sources */,
 				A1A7912F218520FB0012A4C3 /* CerealCollectionViewCell.swift in Sources */,
 				A1A791272184252A0012A4C3 /* Cereal.swift in Sources */,
@@ -560,6 +576,7 @@
 				A16A8513219F70CA000FE684 /* UserInputRow.swift in Sources */,
 				A152F17321952F2700B2EBC1 /* CheckLocationViewController.swift in Sources */,
 				A11A713F215C26B600602B52 /* AppDelegate.swift in Sources */,
+				A16C5D1721C5A4E30053AA1E /* Products.swift in Sources */,
 				A11A7112215C260400602B52 /* MainViewController.swift in Sources */,
 				A1D261D2219F987500FF4620 /* SelectionCollectionViewCell.swift in Sources */,
 				A152F1712195226400B2EBC1 /* OrderCompleteViewController.swift in Sources */,
@@ -567,9 +584,10 @@
 				A1283B15217E5D4A004A8A3C /* Customer.swift in Sources */,
 				A1A79131218538AA0012A4C3 /* MilkCollectionViewCell.swift in Sources */,
 				A1A79129218427E70012A4C3 /* Milk.swift in Sources */,
+				A1224EB321CDA8EE003423B4 /* CheckLocationManager.swift in Sources */,
 				A11A7141215C26EA00602B52 /* Constants.swift in Sources */,
 				A1253286217F8C100077E2E2 /* CheckoutViewController.swift in Sources */,
-				A1253282217F85BC0077E2E2 /* StripeController.swift in Sources */,
+				A1253282217F85BC0077E2E2 /* BraintreeController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -17,14 +17,16 @@ struct Milk {
         case soy = "Soy"
     }
     let type : MilkType
-    let price: Double
+    let extraPrice: Double
     
     init(type: MilkType) {
         self.type = type
-        if type == MilkType.almond ||  type == MilkType.soy{
-            self.price = 0.50
+        if type == MilkType.almond{
+            self.extraPrice = 1.75
+        } else if type == MilkType.soy {
+            self.extraPrice = 1.25
         } else {
-            self.price = 0.00
+            self.extraPrice = 0.00
         }
         
     }

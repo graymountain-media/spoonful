@@ -6,9 +6,12 @@ target 'Spoonful' do
   use_frameworks!
 
   # Pods for Spoonful
-  pod 'Stripe'
   pod 'Alamofire'
   pod 'Firebase/Core'
+  pod 'Firebase/Auth'
+  pod 'Firebase/Database'
+  pod 'Firebase/DynamicLinks'
+  pod 'BraintreeDropIn'
 
   target 'SpoonfulTests' do
     inherit! :search_paths

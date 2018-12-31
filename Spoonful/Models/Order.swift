@@ -21,7 +21,7 @@ class Order {
     init(cereals: [Cereal], milk: Milk, location: String, firstName: String = "", lastName: String = "", phoneNumber: String = "") {
         self.cereals = cereals
         self.milk = milk
-        self.total = 500
+        self.total = 375
         self.id = UUID()
         self.location = location
         self.firstName = firstName
