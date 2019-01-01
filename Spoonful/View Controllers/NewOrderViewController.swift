@@ -229,7 +229,6 @@ class NewOrderViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         navigationController?.isNavigationBarHidden = false
-        CheckLocationManager.shared.locationManager.stopUpdatingLocation()
     }
 
     //MARK:- Private Methods

@@ -12,17 +12,20 @@ import Firebase
 class MainViewController: UIViewController {
     
     let profileCellId = "ProfileCell"
+    var isLoggedIn = false
+    
+    var handle: AuthStateDidChangeListenerHandle?
     
     lazy var profileButton: UIButton = {
         let button = UIButton(frame: CGRect(x: 0, y: 0, width: 39, height: 39))
-        button.setImage(UIImage(named: "profile"), for: .normal)
+        button.setImage(UIImage(named: "profileWhite"), for: .normal)
         button.contentMode = .scaleAspectFit
         button.translatesAutoresizingMaskIntoConstraints = false
         button.addTarget(self, action: #selector(profileButtonPressed), for: .touchUpInside)
         return button
     }()
     
-    let profileMenu = ProfileMenuView()
+//    let profileMenu = ProfileMenuView()
     
     let logoImageView: UIImageView = {
         let imageView = UIImageView()
@@ -39,11 +42,11 @@ class MainViewController: UIViewController {
         return button
     }()
     
-    lazy var tapGestureRecognizer: UITapGestureRecognizer = {
-        let recognizer = UITapGestureRecognizer()
-        recognizer.addTarget(self, action: #selector(dismissProfileMenu))
-        return recognizer
-    }()
+//    lazy var tapGestureRecognizer: UITapGestureRecognizer = {
+//        let recognizer = UITapGestureRecognizer()
+//        recognizer.addTarget(self, action: #selector(dismissProfileMenu))
+//        return recognizer
+//    }()
     
     //MARK:- Life Cycle
     
@@ -53,26 +56,49 @@ class MainViewController: UIViewController {
         view.backgroundColor = main
         CheckLocationManager.shared.locationAuthorizationDelegate = self
         
-        profileMenu.tableView.delegate = self
-        profileMenu.tableView.dataSource = self
-        profileMenu.tableView.register(UITableViewCell.self, forCellReuseIdentifier: profileCellId)
-        
         setViews()
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         navigationController?.isNavigationBarHidden = true
-        CheckLocationManager.shared.locationManager.startUpdatingLocation()    }
+        CheckLocationManager.shared.locationManager.startUpdatingLocation()
+        
+        setAuthenticationHandler()
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        
+        CheckLocationManager.shared.locationManager.stopUpdatingLocation()
+        
+        Auth.auth().removeStateDidChangeListener(handle!)
+    }
 
     
     //MARK:- Private Methods
+    
+    private func setAuthenticationHandler() {
+        handle = Auth.auth().addStateDidChangeListener { (auth, user) in
+            // What to do when auth changes
+            self.isLoggedIn = user != nil
+            
+            if !self.isLoggedIn {
+                CustomerController.shared.currentCustomer = nil
+            } else {
+                CustomerController.shared.updateCurrentCustomer(withUser: user!)
+            }
+            
+            
+        }
+    }
     
     private func setViews() {
         view.addSubview(newOrderButton)
         view.addSubview(logoImageView)
         view.addSubview(profileButton)
-        view.addSubview(profileMenu)
+//        view.addSubview(profileMenu)
+//        view.bringSubviewToFront(profileMenu)
         
         newOrderButton.heightAnchor.constraint(equalToConstant: 44).isActive = true
         newOrderButton.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 30).isActive = true
@@ -86,10 +112,18 @@ class MainViewController: UIViewController {
         
         profileButton.heightAnchor.constraint(equalToConstant: 44).isActive = true
         profileButton.widthAnchor.constraint(equalToConstant: 44).isActive = true
-        profileButton.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 8).isActive = true
+        profileButton.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -8).isActive = true
         profileButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 8).isActive = true
         
-        profileMenu.frame = CGRect(x: -self.view.frame.width/2, y: 0, width: self.view.frame.width/2, height: self.view.frame.height)
+//        profileMenu.frame = CGRect(x: -self.view.frame.width/2, y: 0, width: self.view.frame.width/2, height: self.view.frame.height)
+    }
+    
+    private func updateCurrentUser() {
+        if let currentUser = Auth.auth().currentUser {
+            let currentCustomer = 
+            CustomerController.shared.currentCustomer = nil
+            
+        }
     }
     //MARK:- Button Actions
     
@@ -112,20 +146,17 @@ class MainViewController: UIViewController {
     }
     
     @objc private func profileButtonPressed() {
-        view.addGestureRecognizer(tapGestureRecognizer)
-        UIView.animate(withDuration: 0.2) {
-            self.view.frame.origin.x = self.view.frame.width/2
-//            self.profileMenu.frame.origin.x = 0
+        
+        if !isLoggedIn {
+            let loginVC = LogInViewController()
+            present(loginVC, animated: true, completion: nil)
+        } else {
+            let profileMenuVC = ProfileMenuViewController()
+            navigationController?.pushViewController(profileMenuVC, animated: true)
         }
+        
     }
-    
-    @objc private func dismissProfileMenu() {
-        view.removeGestureRecognizer(tapGestureRecognizer)
-        UIView.animate(withDuration: 0.2) {
-//            self.profileMenu.frame.origin.x = -self.view.frame.width/2
-            self.view.frame.origin.x = 0
-        }
-    }
+
     
     private func checkLocation() {
         
@@ -148,22 +179,22 @@ class MainViewController: UIViewController {
     
 }
 
-extension MainViewController: UITableViewDelegate, UITableViewDataSource {
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 1
-    }
-    
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: profileCellId, for: indexPath)
-        
-        cell.textLabel?.text = "Login"
-        cell.imageView?.image = UIImage(named: "profile")
-        cell.textLabel?.textColor = .white
-        cell.backgroundColor = lightTwo
-        
-        return cell
-    }
-}
+//extension MainViewController: UITableViewDelegate, UITableViewDataSource {
+//    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+//        return 1
+//    }
+//
+//    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+//        let cell = tableView.dequeueReusableCell(withIdentifier: profileCellId, for: indexPath)
+//
+//        cell.textLabel?.text = "Login"
+//        cell.imageView?.image = UIImage(named: "profile")
+//        cell.textLabel?.textColor = .white
+//        cell.backgroundColor = lightTwo
+//
+//        return cell
+//    }
+//}
 
 extension MainViewController: CheckUserDelegate, LocationAuthorizationDelegate {
     func presentAlert(_ alert: UIAlertController) {

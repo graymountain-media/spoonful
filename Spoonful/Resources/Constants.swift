@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Firebase
 
 //MARK:- Colors
 
@@ -20,6 +21,11 @@ let offWhite = UIColor(red: 244/255, green: 244/255, blue: 244/255, alpha: 1)
 let titleFont = UIFont(name: "PeaceSans", size: 24)!
 
 let checkoutGreen = UIColor(red: 0, green: 244/255, blue: 46/255, alpha: 1)
+
+
+//MARK:- Firebase
+
+let ref = Database.database().reference()
 
 //MARK:- Stripe
 

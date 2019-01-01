@@ -122,7 +122,7 @@ class CheckLocationManager: NSObject {
     
     func checkUserLocation() -> Bool {
         if let userLocation = userLocation {
-            if boundariesContain(point: userLocation) {
+            if boundariesContain(point: testUserLocation) {
                 print("user in location")
                 return true
             } else {
