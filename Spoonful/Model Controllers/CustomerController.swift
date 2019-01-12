@@ -15,22 +15,35 @@ class CustomerController {
     
     var currentCustomer: Customer?
     
-    func createNewCustomer(withUser user: User, firstName: String, lastName: String) {
-        let customerID = UUID().uuidString
+    func createNewCustomer(withUser user: User, firstName: String, lastName: String, completion: @escaping (Bool) -> Void) {
+        let customerID = ""
         
         let newCustomer = Customer(user: user, customerId: customerID, firstName: firstName, lastName: lastName)
         
         CustomerController.shared.currentCustomer = newCustomer
         
-        FirebaseController.shared.add(customer: newCustomer)
+        BraintreeController.shared.createBraintreeCustomer(withCustomer: newCustomer) { (responseString) in
+            print("Creating braintree customer")
+            if let customerID = responseString {
+                newCustomer.customerId = customerID
+                completion(true)
+                return
+            }
+            completion(false)
+            return
+        }
+        
+        
     }
     
     func updateCurrentCustomer(withUser user: User) {
-        let customerID = FirebaseController.shared.getCustomerId(forUser: user)
+        FirebaseController.shared.getCustomerId(forUser: user) { (custID) in
+            let currentCustomer = Customer(user: user, customerId: custID)
+            
+            CustomerController.shared.currentCustomer = currentCustomer
+        }
         
-        let currentCustomer = Customer(user: user, customerId: customerID)
         
-        CustomerController.shared.currentCustomer = currentCustomer
     }
     
     

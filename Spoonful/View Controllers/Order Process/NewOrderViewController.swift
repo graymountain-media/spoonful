@@ -10,6 +10,19 @@ import UIKit
 
 class NewOrderViewController: UIViewController {
     
+    var total = 3.50 {
+        didSet {
+            if total == 3.5 {
+                totalLabel.text = "$3.50"
+            } else if total == 5.30 {
+                totalLabel.text = "$5.30"
+            } else {
+                totalLabel.text = "$\(total)"
+            }
+            
+        }
+    }
+    
     //MARK:- Properties
     let selectionCellId = "SelectionCell"
     let bowlCellId = "BowlCell"
@@ -100,7 +113,7 @@ class NewOrderViewController: UIViewController {
     
     let instructionLabel: UILabel = {
         let label = UILabel()
-        label.text = "CHOOSE A BOWL SIZE"
+        label.text = "CHOOSE UP TO 2 CEREALS"
         label.textColor = .white
         label.font = titleFont.withSize(36)
         label.adjustsFontSizeToFitWidth = true
@@ -130,15 +143,15 @@ class NewOrderViewController: UIViewController {
         return view
     }()
     
-    lazy var quantityCollectionView: UICollectionView = {
-        let layout = UICollectionViewFlowLayout()
-        layout.scrollDirection = .vertical
-        let collectionView = UICollectionView(frame: CGRect.zero, collectionViewLayout: layout)
-        collectionView.backgroundColor = .clear
-        collectionView.showsHorizontalScrollIndicator = false
-        collectionView.translatesAutoresizingMaskIntoConstraints = false
-        return collectionView
-    }()
+//    lazy var quantityCollectionView: UICollectionView = {
+//        let layout = UICollectionViewFlowLayout()
+//        layout.scrollDirection = .vertical
+//        let collectionView = UICollectionView(frame: CGRect.zero, collectionViewLayout: layout)
+//        collectionView.backgroundColor = .clear
+//        collectionView.showsHorizontalScrollIndicator = false
+//        collectionView.translatesAutoresizingMaskIntoConstraints = false
+//        return collectionView
+//    }()
     
     lazy var cerealCollectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
@@ -188,18 +201,6 @@ class NewOrderViewController: UIViewController {
         return button
     }()
     
-    //MARK:- Layout Constraint Variables
-    var visibleBowlCollectionTopAnchor: NSLayoutConstraint?
-    var hiddenBowlCollectionTopAnchor: NSLayoutConstraint?
-    
-    var visibleCerealCollectionTopAnchor: NSLayoutConstraint?
-    var hiddenCerealCollectionTopAnchor: NSLayoutConstraint?
-    
-    var visibleMilkCollectionTopAnchor: NSLayoutConstraint?
-    var hiddenMilkCollectionTopAnchor: NSLayoutConstraint?
-    
-    var orderCerealSlot1BottomAnchor: NSLayoutConstraint?
-    
     //MARK:- Life Cycle
     
     override func viewDidLoad() {
@@ -211,10 +212,7 @@ class NewOrderViewController: UIViewController {
         selectionCollectionView.delegate = self
         selectionCollectionView.dataSource = self
         
-        quantityCollectionView.register(BowlCollectionViewCell.self, forCellWithReuseIdentifier: bowlCellId)
-        quantityCollectionView.delegate = self
-        quantityCollectionView.dataSource = self
-        
+
         cerealCollectionView.register(CerealCollectionViewCell.self, forCellWithReuseIdentifier: cerealCellId)
         cerealCollectionView.delegate = self
         cerealCollectionView.dataSource = self
@@ -323,7 +321,7 @@ class NewOrderViewController: UIViewController {
         let imageView = UIImageView(image: selectedCereals[0].image)
         imageView.alpha = 0
         imageView.contentMode = .scaleAspectFit
-        yourOrderView.insertArrangedSubview(imageView, at: 1)
+        yourOrderView.insertArrangedSubview(imageView, at: 0)
         UIView.animate(withDuration: 0.2, animations: {
             imageView.alpha = 1
             
@@ -334,7 +332,7 @@ class NewOrderViewController: UIViewController {
         let imageView = UIImageView(image: selectedCereals[1].image)
         imageView.alpha = 0
         imageView.contentMode = .scaleAspectFit
-        yourOrderView.insertArrangedSubview(imageView, at: 2)
+        yourOrderView.insertArrangedSubview(imageView, at: 1)
         UIView.animate(withDuration: 0.2, animations: {
             imageView.alpha = 1
             
@@ -342,7 +340,7 @@ class NewOrderViewController: UIViewController {
     }
     
     private func removeFirstCereal(){
-        let imageView = yourOrderView.arrangedSubviews[1]
+        let imageView = yourOrderView.arrangedSubviews[0]
         UIView.animate(withDuration: 0.2, animations: {
             imageView.alpha = 0
             
@@ -352,7 +350,7 @@ class NewOrderViewController: UIViewController {
     }
     
     private func removeSecondCereal(){
-        let imageView = yourOrderView.arrangedSubviews[2]
+        let imageView = yourOrderView.arrangedSubviews[1]
         UIView.animate(withDuration: 0.2, animations: {
             imageView.alpha = 0
         }) { (_) in
@@ -366,10 +364,9 @@ class NewOrderViewController: UIViewController {
         orderStage += 1
         
         switch orderStage {
-        case 2:
-            
+        case 1:
             toCerealSelection()
-        case 3:
+        case 2:
             toMilkSelection()
         default:
             print("No next button action")
@@ -380,10 +377,10 @@ class NewOrderViewController: UIViewController {
         orderStage -= 1
         
         switch orderStage {
+//        case 1:
+//            print("To bowl selection")
+//            toBowlSelection()
         case 1:
-            print("To bowl selection")
-            toBowlSelection()
-        case 2:
             print("To cereal selection")
             toCerealSelection()
         default:
@@ -394,8 +391,10 @@ class NewOrderViewController: UIViewController {
     @objc private func checkoutButtonPressed() {
         let checkoutVC = CheckoutViewController()
         if let milk = milk {
-            let newOrder = Order(cereals: selectedCereals, milk: milk, location: "Dorms")
-            checkoutVC.order = newOrder
+            OrderController.shared.currentOrder.milk = milk
+            OrderController.shared.currentOrder.cereals = selectedCereals
+            OrderController.shared.currentOrder.total = total
+            checkoutVC.order = OrderController.shared.currentOrder
             navigationController?.pushViewController(checkoutVC, animated: true)
         } else {
             print("error creating order")
@@ -404,22 +403,22 @@ class NewOrderViewController: UIViewController {
     
     //MARK:- Order Transitions
     
-    private func toBowlSelection(){
-        selectionCollectionView.scrollToItem(at: IndexPath(row: 0, section: 0), at: UICollectionView.ScrollPosition.centeredHorizontally, animated: true)
-        self.nextButton.isEnabled = true
-        self.backButton.isEnabled = false
-        self.instructionLabel.text = "CHOOSE A BOWL SIZE"
-    }
+//    private func toBowlSelection(){
+//        selectionCollectionView.scrollToItem(at: IndexPath(row: 0, section: 0), at: UICollectionView.ScrollPosition.centeredHorizontally, animated: true)
+//        self.nextButton.isEnabled = true
+//        self.backButton.isEnabled = false
+//        self.instructionLabel.text = "CHOOSE A BOWL SIZE"
+//    }
     
     private func toCerealSelection(){
-        selectionCollectionView.scrollToItem(at: IndexPath(row: 1, section: 0), at: UICollectionView.ScrollPosition.centeredHorizontally, animated: true)
+        selectionCollectionView.scrollToItem(at: IndexPath(row: 0, section: 0), at: UICollectionView.ScrollPosition.centeredHorizontally, animated: true)
         
         if selectedCereals.count == 0 {
             self.nextButton.isEnabled = false
         } else {
             self.nextButton.isEnabled = true
         }
-        self.backButton.isEnabled = true
+        self.backButton.isEnabled = false
         self.instructionLabel.text = "CHOOSE YOUR CEREAL"
         
     }
@@ -428,6 +427,7 @@ class NewOrderViewController: UIViewController {
         print("toMilkSelection")
         selectionCollectionView.scrollToItem(at: IndexPath(row: 2, section: 0), at: UICollectionView.ScrollPosition.centeredHorizontally, animated: true)
         self.nextButton.isEnabled = false
+        self.backButton.isEnabled = true
         self.instructionLabel.text = "CHOOSE YOUR MILK"
         
     }
@@ -460,8 +460,10 @@ class NewOrderViewController: UIViewController {
             return
         }
         
+        let selectedCereal = Products.cereal[indexPath.row]
         //Check if cereal was already selected
-        if selectedCereals.contains(Products.cereal[indexPath.row]) {
+        if selectedCereals.contains(selectedCereal) {
+            
             
             //Cereal was already selected
             if let cerealIndexToRemove = selectedCereals.firstIndex(of: Products.cereal[indexPath.row]) {
@@ -478,12 +480,36 @@ class NewOrderViewController: UIViewController {
                 
             }
             if selectedCereals.count < 1 {
-                self.nextButton.isEnabled = false            }
+                self.nextButton.isEnabled = false
+            }
+            var containsPremiumCereal = false
+            for cereal in selectedCereals {
+                if cereal.isPremium {
+                    containsPremiumCereal = true
+                    break
+                }
+            }
+            if selectedCereal.isPremium == true && containsPremiumCereal == false {
+                total -= 0.25
+            }
+            
         } else {
             
             //Cereal was not already selected
             if selectedCereals.count < 2 {
                 cell.layer.borderWidth = 1
+                
+                var containsPremiumCereal = false
+                for cereal in selectedCereals {
+                    if cereal.isPremium {
+                        containsPremiumCereal = true
+                        break
+                    }
+                }
+                if containsPremiumCereal == false && selectedCereal.isPremium == true{
+                    total += 0.25
+                }
+                
                 selectedCereals.append(Products.cereal[indexPath.row])
                 if selectedCereals.count == 1 {
                     print("add first slot")
@@ -494,8 +520,8 @@ class NewOrderViewController: UIViewController {
                 }
                     self.nextButton.isEnabled = true
             }
+            
         }
-//        setCerealOrderViews()
     }
     
     private func milkCellTapped(inCollection collectionView: UICollectionView, atIndexPath indexPath: IndexPath) {
@@ -508,8 +534,14 @@ class NewOrderViewController: UIViewController {
             let tempCell = collectionView.cellForItem(at: IndexPath(row: i, section: 0))
             tempCell?.layer.borderWidth = 0
         }
+        if self.milk?.type == .almond {
+            total -= 1.80
+        }
         cell.layer.borderWidth = 1
         self.milk = Products.milk[indexPath.row]
+        if Products.milk[indexPath.row].type == .almond {
+            total += 1.80
+        }
         orderMilkSlotImageView.image = UIImage(named: "mockMilk")
         yourOrderView.addArrangedSubview(orderMilkSlotImageView)
         checkoutButton.isEnabled = true
@@ -526,8 +558,8 @@ extension NewOrderViewController: UICollectionViewDelegate, UICollectionViewData
         switch collectionView {
         case selectionCollectionView:
             return 3
-        case quantityCollectionView:
-            return 2
+//        case quantityCollectionView:
+//            return 2
         case cerealCollectionView:
             return Products.cereal.count
         default:
@@ -543,26 +575,26 @@ extension NewOrderViewController: UICollectionViewDelegate, UICollectionViewData
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: selectionCellId, for: indexPath)
             
             switch indexPath.row {
+//            case 0:
+//                setup(collectionView: quantityCollectionView, inCell: cell)
             case 0:
-                setup(collectionView: quantityCollectionView, inCell: cell)
-            case 1:
                 setup(collectionView: cerealCollectionView, inCell: cell)
             default:
                 setup(collectionView: milkCollectionView, inCell: cell)
             }
             return cell
-        case quantityCollectionView:
-            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: bowlCellId, for: indexPath) as? BowlCollectionViewCell else {
-                print("Error casting bowl cell")
-                return UICollectionViewCell()
-            }
-            cell.layer.borderColor = UIColor.white.cgColor
-            if indexPath.row == 0 {
-                cell.updateCell(isSmall: true)
-            }else {
-                cell.updateCell(isSmall: false)
-            }
-            return cell
+//        case quantityCollectionView:
+//            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: bowlCellId, for: indexPath) as? BowlCollectionViewCell else {
+//                print("Error casting bowl cell")
+//                return UICollectionViewCell()
+//            }
+//            cell.layer.borderColor = UIColor.white.cgColor
+//            if indexPath.row == 0 {
+//                cell.updateCell(isSmall: true)
+//            }else {
+//                cell.updateCell(isSmall: false)
+//            }
+//            return cell
         case cerealCollectionView:
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cerealCellId, for: indexPath) as? CerealCollectionViewCell else {
                 print("Error casting cereal cell")
@@ -571,8 +603,8 @@ extension NewOrderViewController: UICollectionViewDelegate, UICollectionViewData
             let cereal = Products.cereal[indexPath.row]
             cell.layer.borderColor = UIColor.white.cgColor
             var name = ""
-            if cereal.extraPrice != 0.0 {
-                name += "+ $\(cereal.extraPrice)"
+            if cereal.isPremium {
+                name += "$0.25"
             }
             
             let image = cereal.image
@@ -589,7 +621,14 @@ extension NewOrderViewController: UICollectionViewDelegate, UICollectionViewData
                 return UICollectionViewCell()
             }
             cell.layer.borderColor = UIColor.white.cgColor
-            cell.updateCell(withTitle: Products.milk[indexPath.row].type.rawValue)
+            let milkTitle = Products.milk[indexPath.row].type.rawValue
+            var milkSubTitle = ""
+            if Products.milk[indexPath.row].type == .almond {
+                milkSubTitle = "1.80"
+            }
+            
+            
+            cell.updateCell(withTitle: milkTitle, subtitle: milkSubTitle == "" ? "" : "+$\(milkSubTitle)")
             return cell
         }
     }
@@ -598,15 +637,11 @@ extension NewOrderViewController: UICollectionViewDelegate, UICollectionViewData
         case selectionCollectionView:
             let size = CGSize(width: view.frame.width, height: selectionCollectionView.frame.height)
             return size
-        case quantityCollectionView:
-            let size = CGSize(width: view.frame.width, height: quantityCollectionView.frame.height * 0.48)
-            print("bowl size")
-            return size
         case cerealCollectionView:
             let size = CGSize(width: view.frame.width / 3.5, height: cerealCollectionView.frame.height * 0.45)
             return size
         default:
-            let size = CGSize(width: view.frame.width / 3.5, height: milkCollectionView.frame.height * 0.48)
+            let size = CGSize(width: milkCollectionView.frame.width * 0.48, height: milkCollectionView.frame.height * 0.48)
             return size
         }
         
@@ -616,8 +651,8 @@ extension NewOrderViewController: UICollectionViewDelegate, UICollectionViewData
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         
         switch collectionView {
-        case quantityCollectionView:
-            bowlCellTapped(inCollection: collectionView, atIndexPath: indexPath)
+//        case quantityCollectionView:
+//            bowlCellTapped(inCollection: collectionView, atIndexPath: indexPath)
         case cerealCollectionView:
             cerealCellTapped(inCollection: collectionView, atIndexPath: indexPath)
         default:

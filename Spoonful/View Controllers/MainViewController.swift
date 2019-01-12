@@ -63,7 +63,7 @@ class MainViewController: UIViewController {
         super.viewWillAppear(animated)
         navigationController?.isNavigationBarHidden = true
         CheckLocationManager.shared.locationManager.startUpdatingLocation()
-        
+        updateCurrentUser()
         setAuthenticationHandler()
     }
     
@@ -120,9 +120,17 @@ class MainViewController: UIViewController {
     
     private func updateCurrentUser() {
         if let currentUser = Auth.auth().currentUser {
-            let currentCustomer = 
-            CustomerController.shared.currentCustomer = nil
+            FirebaseController.shared.getCustomerId(forUser: currentUser) { (custID) in
+                let currentCustomer = Customer(user: currentUser, customerId: custID)
+                
+                print("CUST ID AFTER UPDATE: \(custID)")
+                CustomerController.shared.currentCustomer = currentCustomer
+            }
             
+            
+        } else {
+            print("no current user")
+            CustomerController.shared.currentCustomer = nil
         }
     }
     //MARK:- Button Actions
@@ -165,7 +173,7 @@ class MainViewController: UIViewController {
         inLocation = CheckLocationManager.shared.checkUserLocation()
         
         if inLocation {
-            navigationController?.pushViewController(NewOrderViewController(), animated: true)
+            navigationController?.pushViewController(DeliveryDestinationViewController(), animated: true)
         } else {
             let alert = UIAlertController(title: "Not In Delivery Area", message: "We're sorry but you are not currently in the delivery area.", preferredStyle: .alert)
             let okayAction = UIAlertAction(title: "Okay", style: .cancel, handler: nil)

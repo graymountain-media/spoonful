@@ -9,28 +9,17 @@
 import UIKit
 
 class UserInputRow: UIView {
-
-    var title: String = "" {
-        didSet{
-            titleLabel.text = title.uppercased()
-        }
-    }
-    var placeholder: String = "" {
-        didSet {
-            textField.placeholder = placeholder
-        }
-    }
-    
-    var isInvalid = false {
-        didSet{
-            checkValidity()
-        }
-    }
+//    
+//    var isInvalid = false {
+//        didSet{
+//            checkValidity()
+//        }
+//    }
     
     let titleLabel: UILabel = {
         let label = UILabel()
         label.font = titleFont.withSize(20)
-        label.textColor = main
+        label.textColor = .white
         label.textAlignment = .left
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
@@ -39,12 +28,13 @@ class UserInputRow: UIView {
     let textField: UITextField = {
         let field = UITextField()
         field.textAlignment = .right
-        field.backgroundColor = .white
+        field.backgroundColor = lightTwo
         field.layer.cornerRadius = 5
         field.clipsToBounds = true
         field.translatesAutoresizingMaskIntoConstraints = false
         field.layer.borderWidth = 0
-        field.textColor = main
+        field.textColor = .white
+        field.autocorrectionType = .no
         return field
     }()
     
@@ -54,10 +44,7 @@ class UserInputRow: UIView {
         self.titleLabel.text = title
         self.textField.placeholder = placeholder
         
-        self.title = title
-        self.placeholder = placeholder
-        
-        self.backgroundColor = lightOne
+        self.backgroundColor = lightTwo
         self.translatesAutoresizingMaskIntoConstraints = false
         
         self.addSubview(titleLabel)
@@ -77,15 +64,15 @@ class UserInputRow: UIView {
         
     }
     
-    private func checkValidity() {
-        if self.isInvalid {
-            titleLabel.textColor = .red
-            self.layer.borderColor = UIColor.red.cgColor
-            self.layer.borderWidth = 1
-        } else {
-            titleLabel.textColor = main
-            self.layer.borderWidth = 0
-        }
-    }
+//    private func checkValidity() {
+//        if self.isInvalid {
+//            titleLabel.textColor = .red
+//            self.layer.borderColor = UIColor.red.cgColor
+//            self.layer.borderWidth = 1
+//        } else {
+//            titleLabel.textColor = main
+//            self.layer.borderWidth = 0
+//        }
+//    }
 
 }

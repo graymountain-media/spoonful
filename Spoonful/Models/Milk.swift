@@ -12,7 +12,7 @@ struct Milk {
     enum MilkType: String {
         case whole = "Whole"
         case twoPercent = "2%"
-        case skim = "Skim"
+        case fatFree = "Fat-Free"
         case almond = "Almond"
         case soy = "Soy"
     }
@@ -22,7 +22,7 @@ struct Milk {
     init(type: MilkType) {
         self.type = type
         if type == MilkType.almond{
-            self.extraPrice = 1.75
+            self.extraPrice = 1.80
         } else if type == MilkType.soy {
             self.extraPrice = 1.25
         } else {

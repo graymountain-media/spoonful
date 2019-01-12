@@ -14,7 +14,7 @@ class CheckoutRow: UIView {
         let label = UILabel()
         label.text = "PAYMENT"
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.font = titleFont.withSize(24)
+        label.font = titleFont.withSize(20)
         label.textColor = .white
         label.textAlignment = .left
         return label
@@ -31,7 +31,6 @@ class CheckoutRow: UIView {
         let label = UILabel()
         label.text = ""
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.font = titleFont.withSize(24)
         label.textColor = .white
         label.textAlignment = .right
         return label

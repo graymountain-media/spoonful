@@ -11,7 +11,7 @@ import Firebase
 
 class Customer {
     let fireId: String
-    let customerId: String
+    var customerId: String
     let firstName: String
     let email: String
     let lastName: String

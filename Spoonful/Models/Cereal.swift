@@ -10,12 +10,12 @@ import UIKit
 
 struct Cereal: Equatable {
     let name: String
-    let extraPrice: Double
+    let isPremium: Bool
     let image: UIImage
     
-    init(name: String, image: UIImage, extraPrice: Double = 0.00) {
+    init(name: String, image: UIImage, isPremium: Bool = false) {
         self.name = name
         self.image = image
-        self.extraPrice = extraPrice
+        self.isPremium = isPremium
     }
 }

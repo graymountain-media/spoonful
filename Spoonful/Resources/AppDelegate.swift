@@ -8,9 +8,10 @@
 
 import UIKit
 import Firebase
+import BraintreeDropIn
 
 @UIApplicationMain
-class AppDelegate: UIResponder, UIApplicationDelegate {
+ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     var window: UIWindow?
     
@@ -31,7 +32,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         window?.rootViewController = navigationController
         window?.makeKeyAndVisible()
         
+        configureBraintreeUI()
+        
         return true
+    }
+    
+    private func configureBraintreeUI() {        BTUIKAppearance.sharedInstance()?.tintColor = main
+        BTUIKAppearance.sharedInstance()?.formBackgroundColor = .white
+        BTUIKAppearance.sharedInstance()?.primaryTextColor = .black
+        BTUIKAppearance.sharedInstance()?.secondaryTextColor = .black
+        BTUIKAppearance.sharedInstance()?.blurStyle = UIBlurEffect.Style.light
+        BTUIKAppearance.sharedInstance()?.useBlurs = false
     }
 }
 

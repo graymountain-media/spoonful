@@ -35,6 +35,7 @@ class LogInViewController: UIViewController {
         let textField = LoginTextField()
         textField.placeholder = "Email Address"
         textField.setIcon(withName: "email")
+        textField.keyboardType = .emailAddress
         return textField
     }()
     

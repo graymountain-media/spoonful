@@ -13,12 +13,8 @@ class ProfileMenuViewController: UIViewController {
 
     var customer: Customer?
     
-    let titleLabel: UILabel = {
-        let label = UILabel()
-        label.text = ""
-        label.font = titleFont.withSize(28)
-        label.textColor = .white
-        label.translatesAutoresizingMaskIntoConstraints = false
+    let titleLabel: SpoonfulTitleLabel = {
+        let label = SpoonfulTitleLabel()
         return label
     }()
     
@@ -90,6 +86,14 @@ class ProfileMenuViewController: UIViewController {
     }
     
     //MARK:- Button Actions
+    
+    @objc private func createCustomerButtonPressed(){
+        if let customer = customer {
+            BraintreeController.shared.createBraintreeCustomer(withCustomer: customer) { (responseString) in
+                print(responseString)
+            }
+        }
+    }
     
     @objc private func logOutButtonPressed() {
         try? Auth.auth().signOut()

@@ -47,6 +47,7 @@ class RegisterViewController: UIViewController {
         let textField = LoginTextField()
         textField.placeholder = "Email Address"
         textField.setIcon(withName: "email")
+        textField.keyboardType = .emailAddress
         return textField
     }()
     
@@ -250,18 +251,17 @@ class RegisterViewController: UIViewController {
 
             //Successful
             if let user = result?.user {
-                CustomerController.shared.createNewCustomer(withUser: user, firstName: firstName, lastName: lastName)
                 self.view.endEditing(true)
-                
-                let changeRequest = Auth.auth().currentUser?.createProfileChangeRequest()
-                changeRequest?.displayName = "\(firstName) \(lastName)"
-                changeRequest?.commitChanges(completion: { (error) in
-                    if let error = error {
-                        print(error.localizedDescription)
-                    }
+                CustomerController.shared.createNewCustomer(withUser: user, firstName: firstName, lastName: lastName, completion: { (resultString) in
+                    let changeRequest = Auth.auth().currentUser?.createProfileChangeRequest()
+                    changeRequest?.displayName = "\(firstName) \(lastName)"
+                    changeRequest?.commitChanges(completion: { (error) in
+                        if let error = error {
+                            print(error.localizedDescription)
+                        }
+                    })
+                    self.presentingViewController?.presentingViewController?.dismiss(animated: true, completion: nil)
                 })
-                self.presentingViewController?.presentingViewController?.dismiss(animated: true, completion: nil)
-                
             }
         }
 

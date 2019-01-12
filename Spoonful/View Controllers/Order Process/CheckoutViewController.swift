@@ -15,10 +15,30 @@ class CheckoutViewController: UIViewController {
     //MARK:- Properties
     let cellIdentifier = "CheckoutCell"
     
+    var total = 0.0
+    
     let paymentCurrency = "usd"
     var clientToken: String = ""
+    var paymentNonce: String = ""
     
     var order: Order?
+    var customer: Customer?
+    
+    lazy var blurEffectView: UIVisualEffectView = {
+        let effect = UIBlurEffect(style: UIBlurEffect.Style.regular)
+        let blurView = UIVisualEffectView(effect: effect)
+        blurView.frame = UIScreen.main.bounds
+        blurView.isHidden = true
+        blurView.alpha = 0
+        return blurView
+    }()
+    
+    let activityIndicator: UIActivityIndicatorView = {
+        let indicator = UIActivityIndicatorView(style: UIActivityIndicatorView.Style.whiteLarge)
+        indicator.translatesAutoresizingMaskIntoConstraints = false
+        indicator.hidesWhenStopped = true
+        return indicator
+    }()
     
     let yourOrderLabel: UILabel = {
         let label = UILabel()
@@ -74,18 +94,25 @@ class CheckoutViewController: UIViewController {
         
     }()
     
-    let paymentView: CheckoutRow = {
-        let view = CheckoutRow(title: "PAYMENT", detail: "", frame: CGRect.zero)
+    let nameView: CheckoutRow = {
+        let view = CheckoutRow(title: "NAME", detail: "", tappable: false, frame: CGRect.zero)
         view.backgroundColor = .clear
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
     
-    let contactInfoView: CheckoutRow = {
-        let view = CheckoutRow(title: "Contact Info", detail: ">")
-        view.detailLabel.font = UIFont.systemFont(ofSize: 28)
+    let phoneNumberView: CheckoutRow = {
+        let view = CheckoutRow(title: "PHONE NUMBER", detail: "", tappable: false)
         view.backgroundColor = .clear
         view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
+    let paymentView: CheckoutRow = {
+        let view = CheckoutRow(title: "Payment Method", detail: "", tappable: true)
+        view.backgroundColor = .clear
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.isUserInteractionEnabled = false
         return view
     }()
     
@@ -105,24 +132,17 @@ class CheckoutViewController: UIViewController {
         view.backgroundColor = main
         self.title = "Checkout"
         // Do any additional setup after loading the view.
-
+        
+        customer = CustomerController.shared.currentCustomer
+        
         setupOrderView()
         setupRows()
         setupCompleteButton()
+        setupViews()
         fetchClientToken()
     }
     
-    init(){
-        
-        super.init(nibName: nil, bundle: nil)
-        guard let order = order else {return}
-        
-        totalView.detail = "$ \(order.total/100)"
-    }
-    
-    required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
+    //MARK: - Private Methods
     
     private func setupOrderView() {
         
@@ -141,16 +161,15 @@ class CheckoutViewController: UIViewController {
         
         if let order = order {
             
-            let orderStackView = UIStackView(arrangedSubviews: [orderBowlImageView,orderFirstCerealImageView,orderMilkImageView])
+            let orderStackView = UIStackView(arrangedSubviews: [orderFirstCerealImageView,orderMilkImageView])
             orderStackView.axis = .horizontal
             orderStackView.spacing = 4
             orderStackView.distribution = .fillEqually
             orderStackView.translatesAutoresizingMaskIntoConstraints = false
             
             orderFirstCerealImageView.image = order.cereals[0].image
-            orderBowlImageView.image = UIImage(named: "bowl-filled")
             if order.cereals.count == 2 {
-                orderStackView.insertArrangedSubview(orderSecondCerealImageView, at: 2)
+                orderStackView.insertArrangedSubview(orderSecondCerealImageView, at: 1)
                 orderSecondCerealImageView.image = order.cereals[1].image
             }
             
@@ -163,9 +182,14 @@ class CheckoutViewController: UIViewController {
             orderStackView.leadingAnchor.constraint(equalTo: orderView.leadingAnchor, constant: 16).isActive = true
             orderStackView.trailingAnchor.constraint(equalTo: orderView.trailingAnchor, constant: -16).isActive = true
             
-            
-            
-            
+            total = order.total
+            if total == 3.5 {
+                totalView.detail = "$3.50"
+            } else if total == 5.30 {
+                totalView.detail = "$5.30"
+            } else {
+                totalView.detail = "$\(total)"
+            }
         } else {
             print("order not passed")
         }
@@ -173,8 +197,9 @@ class CheckoutViewController: UIViewController {
     
     private func setupRows() {
         view.addSubview(totalView)
+        view.addSubview(nameView)
+        view.addSubview(phoneNumberView)
         view.addSubview(paymentView)
-        view.addSubview(contactInfoView)
         
 //        totalView.frame = CGRect(x: 0, y: 300, width: view.frame.width, height: 50)
         totalView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor).isActive = true
@@ -183,26 +208,37 @@ class CheckoutViewController: UIViewController {
         totalView.heightAnchor.constraint(equalToConstant: 50).isActive = true
         
         
-        contactInfoView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor).isActive = true
-        contactInfoView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor).isActive = true
-        contactInfoView.topAnchor.constraint(equalTo: totalView.bottomAnchor, constant: 16).isActive = true
-        contactInfoView.heightAnchor.constraint(equalToConstant: 50).isActive = true
+        phoneNumberView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor).isActive = true
+        phoneNumberView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor).isActive = true
+        phoneNumberView.topAnchor.constraint(equalTo: totalView.bottomAnchor, constant: 16).isActive = true
+        phoneNumberView.heightAnchor.constraint(equalToConstant: 50).isActive = true
         
+        
+        nameView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor).isActive = true
+        nameView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor).isActive = true
+        nameView.topAnchor.constraint(equalTo: phoneNumberView.bottomAnchor, constant: 16).isActive = true
+        nameView.heightAnchor.constraint(equalToConstant: 50).isActive = true
         
         paymentView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor).isActive = true
         paymentView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor).isActive = true
-        paymentView.topAnchor.constraint(equalTo: contactInfoView.bottomAnchor, constant: 16).isActive = true
+        paymentView.topAnchor.constraint(equalTo: nameView.bottomAnchor, constant: 16).isActive = true
         paymentView.heightAnchor.constraint(equalToConstant: 50).isActive = true
         
-        paymentView.onTap = { [weak self] in
-            print("payment tapped")
+        if let order = order{
+            nameView.detail = "\(order.firstName) \(order.lastName)"
+            phoneNumberView.detail = order.phoneNumber
         }
         
-        contactInfoView.onTap = {[weak self] in
-            let contactVC = ContactInfoTableViewController()
-            contactVC.delegate = self
-            self?.navigationController?.pushViewController(contactVC, animated: true)
+        paymentView.onTap = {
+            self.paymentButtonTapped()
         }
+    }
+    
+    private func setupViews() {
+        navigationController?.view.addSubview(blurEffectView)
+        blurEffectView.contentView.addSubview(activityIndicator)
+        activityIndicator.centerXAnchor.constraint(equalTo: blurEffectView.contentView.centerXAnchor).isActive = true
+        activityIndicator.centerYAnchor.constraint(equalTo: blurEffectView.contentView.centerYAnchor).isActive = true
     }
     
     private func setupCompleteButton() {
@@ -214,21 +250,73 @@ class CheckoutViewController: UIViewController {
         completeButton.heightAnchor.constraint(equalToConstant: 50).isActive = true
     }
     
-    private func fetchClientToken() {
-        BraintreeController.shared.fetchClientToken(forCustomerID: "123456asda") { (token) in
-            if let token = token {
-                self.clientToken = token
-                self.completeButton.isEnabled = true
-                print("THE NEW TOKEN IS: \(token)")
-            }
+    private func startActivityIndicator() {
+        UIView.animate(withDuration: 0.3, animations: {
+            self.blurEffectView.isHidden = false
+            self.blurEffectView.alpha = 1
+        }) { (_) in
+            self.activityIndicator.startAnimating()
         }
+    }
+    
+    private func stopActivityIndicator() {
+        UIView.animate(withDuration: 0.3, animations: {
+            self.activityIndicator.stopAnimating()
+            self.blurEffectView.alpha = 0
+        }) { (_) in
+            self.blurEffectView.isHidden = true
+        }
+    }
+    
+    private func fetchClientToken() {
+        paymentView.activityIndicator.startAnimating()
+        if let customer = self.customer {
+            print("CHECKOUT CUSTOMER ID:\(customer.customerId)")
+            BraintreeController.shared.fetchClientToken(forCustomerID: customer.customerId) { (token) in
+                
+                if let token = token {
+                    self.clientToken = token
+                    print("THE NEW TOKEN IS: \(token)")
+                    self.paymentView.activityIndicator.stopAnimating()
+                    self.paymentView.detail = "Select"
+                    self.paymentView.isUserInteractionEnabled = true
+                }
+            }
+        } else {
+            print("Tokenization key used")
+            clientToken = tokenizationKey
+            paymentView.activityIndicator.stopAnimating()
+            paymentView.detail = "Select"
+            paymentView.isUserInteractionEnabled = true
+        }
+        
     }
     
     //MARK:- Button Actions
     @objc private func completeButtonPressed(){
-//        self.paymentContext.requestPayment()
+        startActivityIndicator()
+        BraintreeController.shared.postTransationNonce(paymentNonce, forAmount: total) { success in
+            print("order attempt complete")
+            print("SUCCESS: \(success)")
+            self.stopActivityIndicator()
+            if success {
+                let orderCompleteVC = OrderCompleteViewController()
+                self.navigationController?.pushViewController(orderCompleteVC, animated: true)
+            } else {
+                let alert = UIAlertController(title: "Order Failed", message: "The order was not able to be processed. Please check your payment information or try another card.", preferredStyle: .alert)
+                let okayAction = UIAlertAction(title: "Okay", style: .cancel, handler: nil)
+                alert.addAction(okayAction)
+                
+                self.present(alert, animated: true, completion: nil)
+            }
+        }
+    }
+    
+    private func paymentButtonTapped() {
         let request =  BTDropInRequest()
-        let dropIn = BTDropInController(authorization: "sandbox_xswpggg8_k2z7jdk8znqf6y3p", request: request)
+        request.vaultManager = true
+        print("FINAL CLIENT TOKEN: \(clientToken)")
+        let dropIn = BTDropInController(authorization: clientToken, request: request)
         { (controller, result, error) in
             if (error != nil) {
                 print("ERROR")
@@ -236,29 +324,37 @@ class CheckoutViewController: UIViewController {
                 print("CANCELLED")
             } else if let result = result {
                 // Use the BTDropInResult properties to update your UI
-                // result.paymentOptionType
-                // result.paymentMethod
-                // result.paymentIcon
-                // result.paymentDescription
+                
+                self.paymentView.detail = result.paymentDescription
+                guard let paymentMethod = result.paymentMethod else {
+                    print("could not get payment method for nonce")
+                    return
+                }
+                self.paymentNonce = paymentMethod.nonce
+                self.completeButton.isEnabled = true
             }
             controller.dismiss(animated: true, completion: nil)
         }
-        self.present(dropIn!, animated: true, completion: nil)
-    }
-    
-}
-
-extension CheckoutViewController: ContactInfoDelegate {
-    func contactInfoEntered(firstName: String, lastName: String, phoneNumber: String) {
-        guard let order = order else {
-            print("No order on return from contact info")
-            return
+        if let dropIn = dropIn {
+            self.present(dropIn, animated: true, completion: nil)
+        } else {
+            print("Drop in not created")
         }
         
-        order.firstName = firstName
-        order.lastName = lastName
-        order.phoneNumber = phoneNumber
     }
     
-    
 }
+//extension CheckoutViewController: ContactInfoDelegate {
+//    func contactInfoEntered(firstName: String, lastName: String, phoneNumber: String) {
+//        guard let order = order else {
+//            print("No order on return from contact info")
+//            return
+//        }
+//
+//        order.firstName = firstName
+//        order.lastName = lastName
+//        order.phoneNumber = phoneNumber
+//    }
+//
+//
+//}

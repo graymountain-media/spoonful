@@ -29,9 +29,15 @@ let ref = Database.database().reference()
 
 //MARK:- Stripe
 
-//let baseURL = URL(string: "http://localhost:3003")
+//let baseURL = URL(string: "http://localhost:3003")!
 let baseURL = URL(string: "https://spoonful-app.herokuapp.com")!
 let stripePublishableKey = "pk_test_MKeRf4JsaxmdN5LSbSmIBff2"
 //let appleMerchantID = "merchant.com.Spoonful"
 let companyName = "Spoonful"
+
+// Tokenization Key
+let tokenizationKey = "sandbox_xswpggg8_k2z7jdk8znqf6y3p"
+
+//MARK: Location Path
+let locationDataPath = Bundle.main.path(forResource: "Locations", ofType: "json")
 

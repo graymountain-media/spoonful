@@ -37,9 +37,22 @@
 		A169501121DACAB90004F61F /* LoginTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = A169501021DACAB90004F61F /* LoginTextField.swift */; };
 		A169501321DAD3700004F61F /* RegisterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A169501221DAD3700004F61F /* RegisterViewController.swift */; };
 		A169501521DBFAD90004F61F /* FirebaseController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A169501421DBFAD90004F61F /* FirebaseController.swift */; };
+		A169501821DC0FBB0004F61F /* Locations.json in Sources */ = {isa = PBXBuildFile; fileRef = A169501721DC0FBB0004F61F /* Locations.json */; };
+		A169501A21DC108A0004F61F /* Location.swift in Sources */ = {isa = PBXBuildFile; fileRef = A169501921DC108A0004F61F /* Location.swift */; };
+		A169501E21DC117A0004F61F /* DeliveryDestinationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A169501D21DC117A0004F61F /* DeliveryDestinationViewController.swift */; };
+		A169502021DC128A0004F61F /* SpoonfulTitleLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A169501F21DC128A0004F61F /* SpoonfulTitleLabel.swift */; };
+		A169502121DC72BA0004F61F /* Locations.json in Resources */ = {isa = PBXBuildFile; fileRef = A169501721DC0FBB0004F61F /* Locations.json */; };
+		A169502321DD75540004F61F /* CheckBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = A169502221DD75540004F61F /* CheckBox.swift */; };
+		A169502521DE8CAE0004F61F /* OrderMenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A169502421DE8CAE0004F61F /* OrderMenuViewController.swift */; };
+		A169502721DE91930004F61F /* OrderMenuTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A169502621DE91930004F61F /* OrderMenuTableViewCell.swift */; };
+		A169502921DEA0770004F61F /* OrderController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A169502821DEA0770004F61F /* OrderController.swift */; };
+		A169502B21DEA55D0004F61F /* DeliveryLocation.swift in Sources */ = {isa = PBXBuildFile; fileRef = A169502A21DEA55D0004F61F /* DeliveryLocation.swift */; };
 		A16A8513219F70CA000FE684 /* UserInputRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = A16A8512219F70CA000FE684 /* UserInputRow.swift */; };
 		A16A8515219F7F46000FE684 /* ContactInfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A16A8514219F7F46000FE684 /* ContactInfoViewController.swift */; };
 		A16C5D1721C5A4E30053AA1E /* Products.swift in Sources */ = {isa = PBXBuildFile; fileRef = A16C5D1621C5A4E30053AA1E /* Products.swift */; };
+		A174327921E2C90F00C00A4F /* buildings.swift in Sources */ = {isa = PBXBuildFile; fileRef = A174327821E2C90F00C00A4F /* buildings.swift */; };
+		A174327B21E2C95B00C00A4F /* Cocktail.swift in Sources */ = {isa = PBXBuildFile; fileRef = A174327A21E2C95B00C00A4F /* Cocktail.swift */; };
+		A174327F21E8484C00C00A4F /* MilkChoiceViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A174327E21E8484C00C00A4F /* MilkChoiceViewController.swift */; };
 		A19930D821A35296004B632E /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = A19930D721A35296004B632E /* GoogleService-Info.plist */; };
 		A1A7912321841E590012A4C3 /* Order.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1A7912221841E590012A4C3 /* Order.swift */; };
 		A1A791272184252A0012A4C3 /* Cereal.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1A791262184252A0012A4C3 /* Cereal.swift */; };
@@ -111,9 +124,21 @@
 		A169501021DACAB90004F61F /* LoginTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginTextField.swift; sourceTree = "<group>"; };
 		A169501221DAD3700004F61F /* RegisterViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterViewController.swift; sourceTree = "<group>"; };
 		A169501421DBFAD90004F61F /* FirebaseController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseController.swift; sourceTree = "<group>"; };
+		A169501721DC0FBB0004F61F /* Locations.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = Locations.json; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.json; };
+		A169501921DC108A0004F61F /* Location.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Location.swift; sourceTree = "<group>"; };
+		A169501D21DC117A0004F61F /* DeliveryDestinationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeliveryDestinationViewController.swift; sourceTree = "<group>"; };
+		A169501F21DC128A0004F61F /* SpoonfulTitleLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpoonfulTitleLabel.swift; sourceTree = "<group>"; };
+		A169502221DD75540004F61F /* CheckBox.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckBox.swift; sourceTree = "<group>"; };
+		A169502421DE8CAE0004F61F /* OrderMenuViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderMenuViewController.swift; sourceTree = "<group>"; };
+		A169502621DE91930004F61F /* OrderMenuTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderMenuTableViewCell.swift; sourceTree = "<group>"; };
+		A169502821DEA0770004F61F /* OrderController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderController.swift; sourceTree = "<group>"; };
+		A169502A21DEA55D0004F61F /* DeliveryLocation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeliveryLocation.swift; sourceTree = "<group>"; };
 		A16A8512219F70CA000FE684 /* UserInputRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserInputRow.swift; sourceTree = "<group>"; };
 		A16A8514219F7F46000FE684 /* ContactInfoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactInfoViewController.swift; sourceTree = "<group>"; };
 		A16C5D1621C5A4E30053AA1E /* Products.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Products.swift; sourceTree = "<group>"; };
+		A174327821E2C90F00C00A4F /* buildings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = buildings.swift; sourceTree = "<group>"; };
+		A174327A21E2C95B00C00A4F /* Cocktail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Cocktail.swift; sourceTree = "<group>"; };
+		A174327E21E8484C00C00A4F /* MilkChoiceViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MilkChoiceViewController.swift; sourceTree = "<group>"; };
 		A19930D721A35296004B632E /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		A1A7912221841E590012A4C3 /* Order.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Order.swift; sourceTree = "<group>"; };
 		A1A791262184252A0012A4C3 /* Cereal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Cereal.swift; sourceTree = "<group>"; };
@@ -234,12 +259,14 @@
 		A11A713D215C26A100602B52 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				A169501621DC0F260004F61F /* Test Data */,
 				A152F183219F3D0C00B2EBC1 /* Fonts */,
 				A1A791342187E46E0012A4C3 /* Assets.xcassets */,
 				A11A7118215C260600602B52 /* LaunchScreen.storyboard */,
 				A11A711B215C260600602B52 /* Info.plist */,
 				A11A713E215C26B600602B52 /* AppDelegate.swift */,
 				A11A7140215C26EA00602B52 /* Constants.swift */,
+				A174327721E2C8F200C00A4F /* Data */,
 				A1A7912C21850A070012A4C3 /* Prices.swift */,
 				A1A791322187D4F20012A4C3 /* Mock.swift */,
 				A1D261D321A33DC200FF4620 /* Extensions.swift */,
@@ -256,7 +283,9 @@
 				A1237FE1218E20460099173F /* CheckoutRow.swift */,
 				A16A8512219F70CA000FE684 /* UserInputRow.swift */,
 				A169501021DACAB90004F61F /* LoginTextField.swift */,
+				A169501F21DC128A0004F61F /* SpoonfulTitleLabel.swift */,
 				A152F182219B690100B2EBC1 /* Buttons */,
+				A174328021EA9EB400C00A4F /* TableView Cells */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -264,16 +293,9 @@
 		A11F79A5215EB4CB00B336EF /* View Controllers */ = {
 			isa = PBXGroup;
 			children = (
-				A152F17221952F2700B2EBC1 /* CheckLocationViewController.swift */,
-				A1253285217F8C100077E2E2 /* CheckoutViewController.swift */,
-				A16A8514219F7F46000FE684 /* ContactInfoViewController.swift */,
-				A126B0BC21DAB26E00286CD7 /* LogInViewController.swift */,
 				A11A7111215C260400602B52 /* MainViewController.swift */,
-				A125327F217F831A0077E2E2 /* NewOrderViewController.swift */,
-				A152F1702195226400B2EBC1 /* OrderCompleteViewController.swift */,
-				A1D261D521A34BA200FF4620 /* OrderConfirmationViewController.swift */,
-				A152F17E219B682F00B2EBC1 /* ProfileMenuViewController.swift */,
-				A169501221DAD3700004F61F /* RegisterViewController.swift */,
+				A169501B21DC11070004F61F /* Order Process */,
+				A169501C21DC113D0004F61F /* Profiles */,
 			);
 			path = "View Controllers";
 			sourceTree = "<group>";
@@ -282,6 +304,7 @@
 			isa = PBXGroup;
 			children = (
 				A1253283217F88470077E2E2 /* CustomerController.swift */,
+				A169502821DEA0770004F61F /* OrderController.swift */,
 			);
 			path = "Model Controllers";
 			sourceTree = "<group>";
@@ -293,6 +316,9 @@
 				A1A7912221841E590012A4C3 /* Order.swift */,
 				A1A791262184252A0012A4C3 /* Cereal.swift */,
 				A1A79128218427E60012A4C3 /* Milk.swift */,
+				A169501921DC108A0004F61F /* Location.swift */,
+				A169502A21DEA55D0004F61F /* DeliveryLocation.swift */,
+				A174327A21E2C95B00C00A4F /* Cocktail.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -302,6 +328,7 @@
 			children = (
 				A152F16E2193787900B2EBC1 /* HighlightButton.swift */,
 				A152F17421962E9700B2EBC1 /* SpoonfulButton.swift */,
+				A169502221DD75540004F61F /* CheckBox.swift */,
 			);
 			path = Buttons;
 			sourceTree = "<group>";
@@ -312,6 +339,56 @@
 				A152F184219F3D2200B2EBC1 /* peace_sans.otf */,
 			);
 			path = Fonts;
+			sourceTree = "<group>";
+		};
+		A169501621DC0F260004F61F /* Test Data */ = {
+			isa = PBXGroup;
+			children = (
+				A169501721DC0FBB0004F61F /* Locations.json */,
+			);
+			path = "Test Data";
+			sourceTree = "<group>";
+		};
+		A169501B21DC11070004F61F /* Order Process */ = {
+			isa = PBXGroup;
+			children = (
+				A152F17221952F2700B2EBC1 /* CheckLocationViewController.swift */,
+				A169501D21DC117A0004F61F /* DeliveryDestinationViewController.swift */,
+				A16A8514219F7F46000FE684 /* ContactInfoViewController.swift */,
+				A169502421DE8CAE0004F61F /* OrderMenuViewController.swift */,
+				A174327E21E8484C00C00A4F /* MilkChoiceViewController.swift */,
+				A125327F217F831A0077E2E2 /* NewOrderViewController.swift */,
+				A1253285217F8C100077E2E2 /* CheckoutViewController.swift */,
+				A152F1702195226400B2EBC1 /* OrderCompleteViewController.swift */,
+				A1D261D521A34BA200FF4620 /* OrderConfirmationViewController.swift */,
+			);
+			path = "Order Process";
+			sourceTree = "<group>";
+		};
+		A169501C21DC113D0004F61F /* Profiles */ = {
+			isa = PBXGroup;
+			children = (
+				A126B0BC21DAB26E00286CD7 /* LogInViewController.swift */,
+				A152F17E219B682F00B2EBC1 /* ProfileMenuViewController.swift */,
+				A169501221DAD3700004F61F /* RegisterViewController.swift */,
+			);
+			path = Profiles;
+			sourceTree = "<group>";
+		};
+		A174327721E2C8F200C00A4F /* Data */ = {
+			isa = PBXGroup;
+			children = (
+				A174327821E2C90F00C00A4F /* buildings.swift */,
+			);
+			path = Data;
+			sourceTree = "<group>";
+		};
+		A174328021EA9EB400C00A4F /* TableView Cells */ = {
+			isa = PBXGroup;
+			children = (
+				A169502621DE91930004F61F /* OrderMenuTableViewCell.swift */,
+			);
+			path = "TableView Cells";
 			sourceTree = "<group>";
 		};
 		A1D261D0219F985100FF4620 /* CollectionView Cells */ = {
@@ -448,6 +525,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A169502121DC72BA0004F61F /* Locations.json in Resources */,
 				A1A791352187E46E0012A4C3 /* Assets.xcassets in Resources */,
 				A152F178219B641700B2EBC1 /* universityOfUtah.gpx in Resources */,
 				A11A711A215C260600602B52 /* LaunchScreen.storyboard in Resources */,
@@ -578,6 +656,8 @@
 				A1237FE2218E20460099173F /* CheckoutRow.swift in Sources */,
 				A169501521DBFAD90004F61F /* FirebaseController.swift in Sources */,
 				A126B0BD21DAB26E00286CD7 /* LogInViewController.swift in Sources */,
+				A174327B21E2C95B00C00A4F /* Cocktail.swift in Sources */,
+				A169501E21DC117A0004F61F /* DeliveryDestinationViewController.swift in Sources */,
 				A1A791332187D4F20012A4C3 /* Mock.swift in Sources */,
 				A1A7912F218520FB0012A4C3 /* CerealCollectionViewCell.swift in Sources */,
 				A1A791272184252A0012A4C3 /* Cereal.swift in Sources */,
@@ -585,20 +665,30 @@
 				A152F17F219B682F00B2EBC1 /* ProfileMenuViewController.swift in Sources */,
 				A1253280217F831A0077E2E2 /* NewOrderViewController.swift in Sources */,
 				A16A8513219F70CA000FE684 /* UserInputRow.swift in Sources */,
+				A169502521DE8CAE0004F61F /* OrderMenuViewController.swift in Sources */,
 				A152F17321952F2700B2EBC1 /* CheckLocationViewController.swift in Sources */,
 				A11A713F215C26B600602B52 /* AppDelegate.swift in Sources */,
+				A169502921DEA0770004F61F /* OrderController.swift in Sources */,
+				A169501821DC0FBB0004F61F /* Locations.json in Sources */,
 				A16C5D1721C5A4E30053AA1E /* Products.swift in Sources */,
+				A169502021DC128A0004F61F /* SpoonfulTitleLabel.swift in Sources */,
 				A11A7112215C260400602B52 /* MainViewController.swift in Sources */,
 				A1D261D2219F987500FF4620 /* SelectionCollectionViewCell.swift in Sources */,
+				A169502321DD75540004F61F /* CheckBox.swift in Sources */,
 				A152F1712195226400B2EBC1 /* OrderCompleteViewController.swift in Sources */,
 				A1A7912B218505480012A4C3 /* BowlCollectionViewCell.swift in Sources */,
 				A1283B15217E5D4A004A8A3C /* Customer.swift in Sources */,
+				A169501A21DC108A0004F61F /* Location.swift in Sources */,
 				A1A79131218538AA0012A4C3 /* MilkCollectionViewCell.swift in Sources */,
 				A1A79129218427E70012A4C3 /* Milk.swift in Sources */,
+				A169502721DE91930004F61F /* OrderMenuTableViewCell.swift in Sources */,
 				A169501321DAD3700004F61F /* RegisterViewController.swift in Sources */,
 				A1224EB321CDA8EE003423B4 /* CheckLocationManager.swift in Sources */,
+				A174327921E2C90F00C00A4F /* buildings.swift in Sources */,
 				A11A7141215C26EA00602B52 /* Constants.swift in Sources */,
 				A1253286217F8C100077E2E2 /* CheckoutViewController.swift in Sources */,
+				A174327F21E8484C00C00A4F /* MilkChoiceViewController.swift in Sources */,
+				A169502B21DEA55D0004F61F /* DeliveryLocation.swift in Sources */,
 				A1253282217F85BC0077E2E2 /* BraintreeController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -26,6 +26,7 @@ class LoginTextField: UITextField {
         
         self.translatesAutoresizingMaskIntoConstraints = false
         self.backgroundColor = .white
+        self.autocorrectionType = .no
         
         leftViewMode = .always
         leftView = customLeftView

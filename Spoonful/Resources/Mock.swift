@@ -19,5 +19,5 @@ class Mock{
                          Cereal(name: "Fruity Pebels", image: UIImage(named: "mockLogo") ?? UIImage()),
                          Cereal(name: "Honeycomb", image: UIImage(named: "mockLogo") ?? UIImage())]
     
-    static let milk = [Milk(type: .twoPercent), Milk(type: .whole), Milk(type: .skim), Milk(type: .almond), Milk(type: .soy)]
+    static let milk = [Milk(type: .twoPercent), Milk(type: .whole), Milk(type: .fatFree), Milk(type: .almond), Milk(type: .soy)]
 }

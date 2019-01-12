@@ -1,0 +1,28 @@
+//
+//  LocationsJSON.json
+//  Spoonful
+//
+//  Created by Jake Gray on 1/1/19.
+//  Copyright © 2019 Jake Gray. All rights reserved.
+//
+
+{
+    "locations": [
+        {
+            "name": "building_a",
+            "rooms": [
+                "a1",
+                "a2",
+                "a3"
+            ]
+        },
+        {
+            "name": "building_b",
+            "rooms": [
+                "b1",
+                "b2",
+                "b3"
+            ]
+        }
+    ]
+}

@@ -9,16 +9,26 @@
 import Foundation
 
 class Order {
-    let cereals: [Cereal]
-    let milk: Milk
-    let total: Int
+    var cereals: [Cereal]
+    var milk: Milk?
+    var total: Double
     let id: UUID
-    let location: String
+    var location: DeliveryLocation?
     var firstName: String
     var lastName: String
     var phoneNumber: String
+    var canText = true
     
-    init(cereals: [Cereal], milk: Milk, location: String, firstName: String = "", lastName: String = "", phoneNumber: String = "") {
+    init(){
+        self.cereals = []
+        self.total = 0
+        self.id = UUID()
+        self.firstName = ""
+        self.lastName = ""
+        self.phoneNumber = ""
+    }
+    
+    init(cereals: [Cereal], milk: Milk, location: DeliveryLocation, firstName: String = "", lastName: String = "", phoneNumber: String = "") {
         self.cereals = cereals
         self.milk = milk
         self.total = 375
