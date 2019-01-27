@@ -11,6 +11,15 @@ import Firebase
 
 class RegisterViewController: UIViewController {
     
+    lazy var blurEffectView: UIVisualEffectView = {
+        let effect = UIBlurEffect(style: UIBlurEffect.Style.regular)
+        let blurView = UIVisualEffectView(effect: effect)
+        blurView.frame = UIScreen.main.bounds
+        blurView.isHidden = true
+        blurView.alpha = 0
+        return blurView
+    }()
+    
     let titleLabel: UILabel = {
         let label = UILabel()
         label.text = "Register"
@@ -125,7 +134,17 @@ class RegisterViewController: UIViewController {
         view.addSubview(passwordConfirmationTextField)
         view.addSubview(registerButton)
         view.addSubview(existingAccountButton)
-        view.addSubview(activityIndicator)
+        
+        firstNameTextField.delegate = self
+        lastNameTextField.delegate = self
+        emailTextField.delegate = self
+        passwordTextField.delegate = self
+        passwordConfirmationTextField.delegate = self
+        
+        view.addSubview(blurEffectView)
+        blurEffectView.contentView.addSubview(activityIndicator)
+        activityIndicator.centerXAnchor.constraint(equalTo: blurEffectView.contentView.centerXAnchor).isActive = true
+        activityIndicator.centerYAnchor.constraint(equalTo: blurEffectView.contentView.centerYAnchor).isActive = true
         
         titleLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor).isActive = true
         titleLabel.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 8).isActive = true
@@ -171,11 +190,24 @@ class RegisterViewController: UIViewController {
         existingAccountButton.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -16).isActive = true
         existingAccountButton.heightAnchor.constraint(equalToConstant: 44).isActive = true
         
-        activityIndicator.centerYAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerYAnchor).isActive = true
-        activityIndicator.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor).isActive = true
-        activityIndicator.heightAnchor.constraint(equalToConstant: 50).isActive = true
-        activityIndicator.widthAnchor.constraint(equalToConstant: 50).isActive = true
-        
+    }
+    
+    private func startActivityIndicator() {
+        UIView.animate(withDuration: 0.3, animations: {
+            self.blurEffectView.isHidden = false
+            self.blurEffectView.alpha = 1
+        }) { (_) in
+            self.activityIndicator.startAnimating()
+        }
+    }
+    
+    private func stopActivityIndicator() {
+        UIView.animate(withDuration: 0.3, animations: {
+            self.activityIndicator.stopAnimating()
+            self.blurEffectView.alpha = 0
+        }) { (_) in
+            self.blurEffectView.isHidden = true
+        }
     }
     
     //MARK:- Button Actions
@@ -234,12 +266,12 @@ class RegisterViewController: UIViewController {
             return
         }
 
-        activityIndicator.startAnimating()
+        startActivityIndicator()
         Auth.auth().createUser(withEmail: email, password: password) { (result, error) in
 
             if let error = error {
                 DispatchQueue.main.async {
-                    self.activityIndicator.stopAnimating()
+                    self.stopActivityIndicator()
                 }
                 let alert = UIAlertController(title: "Oops! Something went wrong!", message: error.localizedDescription, preferredStyle: .alert)
                 let okayAction = UIAlertAction(title: "Okay", style: .cancel, handler: nil)

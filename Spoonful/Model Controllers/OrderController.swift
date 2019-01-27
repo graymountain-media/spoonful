@@ -13,9 +13,13 @@ class OrderController {
     
     static let shared = OrderController()
     
-    let currentOrder: Order
+    var currentOrder: Order
     
     init() {
+        self.currentOrder = Order()
+    }
+    
+    func resetOrder() {
         self.currentOrder = Order()
     }
 }

@@ -14,7 +14,7 @@ class BraintreeController {
     static let shared = BraintreeController()
     
     func fetchClientToken(forCustomerID custID: String, completion: @escaping (String?) -> Void) {
-        let clientTokenURL = baseURL.appendingPathComponent("client_token")
+        let clientTokenURL = SettingsManager.shared.baseURL.appendingPathComponent("client_token")
         let params = [
             "customerId": custID
         ]
@@ -38,22 +38,50 @@ class BraintreeController {
         }
     }
     
-    func createBraintreeCustomer(withCustomer customer: Customer, completion: @escaping (String?) -> Void) {
-        let createCustomerURL = baseURL.appendingPathComponent("create_customer")
+    func createProductionBraintreeCustomer(withCustomer customer: Customer, completion: @escaping (String?) -> Void) {
+        let createCustomerProductionURL = productionBaseURL.appendingPathComponent("create_customer")
         let params = [
             "firstName": customer.firstName,
             "lastName": customer.lastName,
             "email": customer.email
         ]
         
-        Alamofire.request(createCustomerURL, method: .post, parameters: params, encoding: URLEncoding.queryString)
+        Alamofire.request(createCustomerProductionURL, method: .post, parameters: params, encoding: URLEncoding.queryString)
             .validate(statusCode: 200..<300)
             .responseJSON { responseJSON in
                 switch responseJSON.result {
                 case .success(let json):
                     print("JSON: \(json)")
                     if let data = responseJSON.data, let jsonString = json as? String {
-                        let cusomerID = String(data: data, encoding: String.Encoding.utf8)
+                        print("JSON STRING: \(jsonString)")
+                        completion(jsonString)
+                    } else {
+                        print("Error getting data from response.")
+                        completion(nil)
+                    }
+                case .failure(let error):
+                    print("Error Getting Customer ID: \(error.localizedDescription)")
+                    completion(nil)
+                }
+        }
+    }
+    
+    func createSandboxBraintreeCustomer(withCustomer customer: Customer, completion: @escaping (String?) -> Void) {
+        let createCustomerSandboxURL = sandboxBaseURL.appendingPathComponent("create_customer")
+        let params = [
+            "firstName": customer.firstName,
+            "lastName": customer.lastName,
+            "email": customer.email
+        ]
+        
+        Alamofire.request(createCustomerSandboxURL, method: .post, parameters: params, encoding: URLEncoding.queryString)
+            .validate(statusCode: 200..<300)
+            .responseJSON { responseJSON in
+                switch responseJSON.result {
+                case .success(let json):
+                    print("JSON: \(json)")
+                    if let data = responseJSON.data, let jsonString = json as? String {
+                        print("JSON STRING: \(jsonString)")
                         completion(jsonString)
                     } else {
                         print("Error getting data from response.")
@@ -67,7 +95,7 @@ class BraintreeController {
     }
     
     func postTransationNonce(_ nonce: String, forAmount amount: Double, completion: @escaping(Bool) -> Void) {
-        let chcekoutURL = baseURL.appendingPathComponent("checkout")
+        let chcekoutURL = SettingsManager.shared.baseURL.appendingPathComponent("checkout")
         
         let params = [
             "paymentMethodNonce": nonce,

@@ -121,8 +121,12 @@ class CheckLocationManager: NSObject {
     }
     
     func checkUserLocation() -> Bool {
+        if !SettingsManager.shared.isProduction {
+            return true
+        }
+        locationManager.startUpdatingLocation()
         if let userLocation = userLocation {
-            if boundariesContain(point: testUserLocation) {
+            if boundariesContain(point: userLocation) {
                 print("user in location")
                 return true
             } else {
@@ -134,10 +138,12 @@ class CheckLocationManager: NSObject {
                 }
                 alert.addAction(okayAction)
                 checkUserLocationDelegate?.presentAlert(alert)
+                locationManager.startUpdatingLocation()
                 return false
             }
         } else {
             print("could not get user location")
+            locationManager.startUpdatingLocation()
             return false
         }
     }

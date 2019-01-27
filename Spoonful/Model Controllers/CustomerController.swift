@@ -15,19 +15,29 @@ class CustomerController {
     
     var currentCustomer: Customer?
     
-    func createNewCustomer(withUser user: User, firstName: String, lastName: String, completion: @escaping (Bool) -> Void) {
+    func  createNewCustomer(withUser user: User, firstName: String, lastName: String, completion: @escaping (Bool) -> Void) {
         let customerID = ""
-        
-        let newCustomer = Customer(user: user, customerId: customerID, firstName: firstName, lastName: lastName)
+
+        let newCustomer = Customer(user: user, sandboxCustomerID: customerID, prodCustomerID: customerID, firstName: firstName, lastName: lastName)
         
         CustomerController.shared.currentCustomer = newCustomer
         
-        BraintreeController.shared.createBraintreeCustomer(withCustomer: newCustomer) { (responseString) in
+        BraintreeController.shared.createProductionBraintreeCustomer(withCustomer: newCustomer) { (responseString) in
             print("Creating braintree customer")
             if let customerID = responseString {
-                newCustomer.customerId = customerID
-                completion(true)
-                return
+                print("production CUSTOMER ID: \(customerID)")
+                newCustomer.prodCustomerID = customerID
+                BraintreeController.shared.createSandboxBraintreeCustomer(withCustomer: newCustomer, completion: { (responseString) in
+                    if let customerID = responseString {
+                        print("production CUSTOMER ID: \(customerID)")
+                        newCustomer.sandboxCustomerID = customerID
+                        FirebaseController.shared.add(customer: newCustomer)
+                        completion(true)
+                        return
+                    }
+                    completion(false)
+                    return
+                })
             }
             completion(false)
             return
@@ -37,10 +47,17 @@ class CustomerController {
     }
     
     func updateCurrentCustomer(withUser user: User) {
-        FirebaseController.shared.getCustomerId(forUser: user) { (custID) in
-            let currentCustomer = Customer(user: user, customerId: custID)
+        var prodCustomerID = ""
+        var sandboxCustomerID = ""
+        FirebaseController.shared.getProductionCustomerId(forUser: user) { (custID) in
+            prodCustomerID = custID
             
-            CustomerController.shared.currentCustomer = currentCustomer
+            FirebaseController.shared.getSandboxCustomerId(forUser: user, completion: { (custID) in
+                sandboxCustomerID = custID
+                
+                let customer = Customer(user: user, sandboxCustomerID: sandboxCustomerID, prodCustomerID: prodCustomerID)
+                CustomerController.shared.currentCustomer = customer
+            })
         }
         
         

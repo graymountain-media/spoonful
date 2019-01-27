@@ -271,8 +271,13 @@ class CheckoutViewController: UIViewController {
     private func fetchClientToken() {
         paymentView.activityIndicator.startAnimating()
         if let customer = self.customer {
-            print("CHECKOUT CUSTOMER ID:\(customer.customerId)")
-            BraintreeController.shared.fetchClientToken(forCustomerID: customer.customerId) { (token) in
+            var customerID = ""
+            if SettingsManager.shared.isProduction {
+                customerID = customer.prodCustomerID
+            } else {
+                customerID = customer.sandboxCustomerID
+            }
+            BraintreeController.shared.fetchClientToken(forCustomerID: customerID) { (token) in
                 
                 if let token = token {
                     self.clientToken = token
@@ -284,7 +289,7 @@ class CheckoutViewController: UIViewController {
             }
         } else {
             print("Tokenization key used")
-            clientToken = tokenizationKey
+            clientToken = SettingsManager.shared.tokenizationKey
             paymentView.activityIndicator.stopAnimating()
             paymentView.detail = "Select"
             paymentView.isUserInteractionEnabled = true
@@ -294,20 +299,39 @@ class CheckoutViewController: UIViewController {
     
     //MARK:- Button Actions
     @objc private func completeButtonPressed(){
+        guard let order = order else {
+            let alert = UIAlertController(title: "Order Failed", message: "The order was not able to be processed. Please try again.", preferredStyle: .alert)
+            let okayAction = UIAlertAction(title: "Okay", style: .cancel, handler: nil)
+            alert.addAction(okayAction)
+            
+            self.present(alert, animated: true, completion: nil)
+            return
+        }
+        order.isTestOrder = !SettingsManager.shared.isProduction
+        let formatter = DateFormatter()
+        formatter.dateFormat = "MM-dd-yyyy HH:mm"
+        order.dateOrdered = formatter.string(from: Date())
         startActivityIndicator()
         BraintreeController.shared.postTransationNonce(paymentNonce, forAmount: total) { success in
             print("order attempt complete")
             print("SUCCESS: \(success)")
             self.stopActivityIndicator()
             if success {
-                let orderCompleteVC = OrderCompleteViewController()
-                self.navigationController?.pushViewController(orderCompleteVC, animated: true)
+                
+                FirebaseController.shared.send(order: order, completion: { (success) in
+                    if success {
+                        let orderCompleteVC = OrderCompleteViewController()
+                        self.navigationController?.pushViewController(orderCompleteVC, animated: true)
+                    }
+                })
+        
             } else {
                 let alert = UIAlertController(title: "Order Failed", message: "The order was not able to be processed. Please check your payment information or try another card.", preferredStyle: .alert)
                 let okayAction = UIAlertAction(title: "Okay", style: .cancel, handler: nil)
                 alert.addAction(okayAction)
-                
                 self.present(alert, animated: true, completion: nil)
+                
+                
             }
         }
     }

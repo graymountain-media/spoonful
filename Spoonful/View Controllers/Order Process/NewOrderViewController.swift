@@ -624,11 +624,13 @@ extension NewOrderViewController: UICollectionViewDelegate, UICollectionViewData
             let milkTitle = Products.milk[indexPath.row].type.rawValue
             var milkSubTitle = ""
             if Products.milk[indexPath.row].type == .almond {
-                milkSubTitle = "1.80"
+                milkSubTitle = "Coming Soon"
+                cell.alpha = 0.5
+                cell.isUserInteractionEnabled = false
             }
             
             
-            cell.updateCell(withTitle: milkTitle, subtitle: milkSubTitle == "" ? "" : "+$\(milkSubTitle)")
+            cell.updateCell(withTitle: milkTitle, subtitle: milkSubTitle == "" ? "" : milkSubTitle)
             return cell
         }
     }

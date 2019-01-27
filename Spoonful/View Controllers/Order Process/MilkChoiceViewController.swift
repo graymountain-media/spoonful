@@ -106,7 +106,9 @@ extension MilkChoiceViewController: UICollectionViewDelegate, UICollectionViewDa
         let milkTitle = Products.milk[indexPath.row].type.rawValue
         var milkSubTitle = ""
         if Products.milk[indexPath.row].type == .almond {
-            milkSubTitle = "1.80"
+            milkSubTitle = "Coming Soon"
+            cell.alpha = 0.5
+            cell.isUserInteractionEnabled = false
         }
         cell.updateCell(withTitle: milkTitle, subtitle: milkSubTitle)
         return cell

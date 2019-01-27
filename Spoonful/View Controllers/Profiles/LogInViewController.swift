@@ -13,6 +13,15 @@ class LogInViewController: UIViewController {
 
     //MARK:- Views
     
+    lazy var blurEffectView: UIVisualEffectView = {
+        let effect = UIBlurEffect(style: UIBlurEffect.Style.regular)
+        let blurView = UIVisualEffectView(effect: effect)
+        blurView.frame = UIScreen.main.bounds
+        blurView.isHidden = true
+        blurView.alpha = 0
+        return blurView
+    }()
+    
     let titleLabel: UILabel = {
         let label = UILabel()
         label.text = "Login"
@@ -64,6 +73,16 @@ class LogInViewController: UIViewController {
         return button
     }()
     
+    lazy var forgotPasswordButton: UIButton = {
+        let button = UIButton()
+        button.setTitle( "Forgot Password?", for: .normal)
+        button.setTitleColor(.white, for: .normal)
+        button.backgroundColor = main
+        button.addTarget(self, action: #selector(forgotPasswordButtonPressed), for: .touchUpInside)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        return button
+    }()
+    
     let activityIndicator: UIActivityIndicatorView = {
         let indicatior = UIActivityIndicatorView(style: UIActivityIndicatorView.Style.whiteLarge)
         indicatior.hidesWhenStopped = true
@@ -101,7 +120,12 @@ class LogInViewController: UIViewController {
         view.addSubview(passwordTextField)
         view.addSubview(loginButton)
         view.addSubview(newAccountButton)
-        view.addSubview(activityIndicator)
+        view.addSubview(forgotPasswordButton)
+        
+        view.addSubview(blurEffectView)
+        blurEffectView.contentView.addSubview(activityIndicator)
+        activityIndicator.centerXAnchor.constraint(equalTo: blurEffectView.contentView.centerXAnchor).isActive = true
+        activityIndicator.centerYAnchor.constraint(equalTo: blurEffectView.contentView.centerYAnchor).isActive = true
         
         titleLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor).isActive = true
         titleLabel.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 8).isActive = true
@@ -127,26 +151,44 @@ class LogInViewController: UIViewController {
         loginButton.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -16).isActive = true
         loginButton.heightAnchor.constraint(equalToConstant: 44).isActive = true
         
-        newAccountButton.topAnchor.constraint(equalTo: loginButton.bottomAnchor, constant: 8).isActive = true
+        forgotPasswordButton.topAnchor.constraint(equalTo: loginButton.bottomAnchor, constant: 8).isActive = true
+        forgotPasswordButton.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 16).isActive = true
+        forgotPasswordButton.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -16).isActive = true
+        forgotPasswordButton.heightAnchor.constraint(equalToConstant: 44).isActive = true
+        
+        newAccountButton.topAnchor.constraint(equalTo: forgotPasswordButton.bottomAnchor, constant: 8).isActive = true
         newAccountButton.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 16).isActive = true
         newAccountButton.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -16).isActive = true
         newAccountButton.heightAnchor.constraint(equalToConstant: 44).isActive = true
         
-        activityIndicator.centerYAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerYAnchor).isActive = true
-        activityIndicator.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor).isActive = true
-        activityIndicator.heightAnchor.constraint(equalToConstant: 50).isActive = true
-        activityIndicator.widthAnchor.constraint(equalToConstant: 50).isActive = true
-        
+    }
+    
+    private func startActivityIndicator() {
+        UIView.animate(withDuration: 0.3, animations: {
+            self.blurEffectView.isHidden = false
+            self.blurEffectView.alpha = 1
+        }) { (_) in
+            self.activityIndicator.startAnimating()
+        }
+    }
+    
+    private func stopActivityIndicator() {
+        UIView.animate(withDuration: 0.3, animations: {
+            self.activityIndicator.stopAnimating()
+            self.blurEffectView.alpha = 0
+        }) { (_) in
+            self.blurEffectView.isHidden = true
+        }
     }
     
     //MARK:- Button Actions
     
     @objc private func loginButtonPressed() {
         view.endEditing(true)
-        activityIndicator.startAnimating()
+        
         
         guard let email = emailTextField.text, !email.isEmpty else {
-            activityIndicator.stopAnimating()
+            
             let alert = UIAlertController(title: "Missing Information", message: "No email entered", preferredStyle: .alert)
             let okayAction = UIAlertAction(title: "Okay", style: .cancel, handler: nil)
             alert.addAction(okayAction)
@@ -156,7 +198,6 @@ class LogInViewController: UIViewController {
         }
 
         guard let password = passwordTextField.text, !password.isEmpty else {
-            activityIndicator.stopAnimating()
             let alert = UIAlertController(title: "Missing Information", message: "No password entered", preferredStyle: .alert)
             let okayAction = UIAlertAction(title: "Okay", style: .cancel, handler: nil)
             alert.addAction(okayAction)
@@ -165,9 +206,10 @@ class LogInViewController: UIViewController {
             return
 
         }
-
+        
+        startActivityIndicator()
         Auth.auth().signIn(withEmail: email, password: password) { (auth, error) in
-            self.activityIndicator.stopAnimating()
+            self.stopActivityIndicator()
             if let error = error {
                 let alert = UIAlertController(title: "Error Logging In", message: error.localizedDescription, preferredStyle: .alert)
                 let okayAction = UIAlertAction(title: "Okay", style: .cancel, handler: nil)
@@ -180,6 +222,13 @@ class LogInViewController: UIViewController {
 
         }
         
+    }
+    
+    @objc private func forgotPasswordButtonPressed() {
+        self.view.endEditing(true)
+        
+        let forgotPasswordVC = ForgotPasswordViewController()
+        present(forgotPasswordVC, animated: true, completion: nil)
     }
     
     @objc private func newAccountButtonPressed() {
@@ -202,6 +251,7 @@ extension LogInViewController: UITextFieldDelegate {
             passwordTextField.becomeFirstResponder()
         } else {
             view.endEditing(true)
+            loginButtonPressed()
         }
         
         return true

@@ -32,11 +32,15 @@ class DeliveryDestinationViewController: UIViewController {
         inputRow.translatesAutoresizingMaskIntoConstraints = false
         inputRow.textField.text = "Select"
         inputRow.textField.tintColor = .clear
+        inputRow.textField.isUserInteractionEnabled = false
         return inputRow
     }()
     
     let roomInputRow: UserInputRow = {
         let inputRow = UserInputRow(title: "Room", placeholder: "Optional")
+        let paddingView = UIView(frame: CGRect(x: 0, y: 0, width: 8, height: 40))
+        inputRow.textField.rightView = paddingView
+        inputRow.textField.rightViewMode = .always
         inputRow.translatesAutoresizingMaskIntoConstraints = false
         inputRow.textField.backgroundColor = .white
         inputRow.textField.textColor = .black
@@ -61,9 +65,18 @@ class DeliveryDestinationViewController: UIViewController {
         return label
     }()
     
+    let specialNotesDetailLabel: UILabel = {
+        let label = UILabel()
+        label.text = "e.g. Description"
+        label.font = UIFont.systemFont(ofSize: 14, weight: .light)
+        label.textColor = .white
+        label.textAlignment = .left
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+    
     let specialNotesTextView: UITextView = {
         let textView = UITextView()
-        textView.text = "e.g. 'I am wearing a red hat'"
         textView.translatesAutoresizingMaskIntoConstraints = false
         textView.autocorrectionType = .no
         return textView
@@ -101,6 +114,9 @@ class DeliveryDestinationViewController: UIViewController {
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Next", style: .plain, target: self, action: #selector(nextButtonPressed))
         navigationItem.rightBarButtonItem?.isEnabled = false
         
+        let buildingTapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(buildingRowTapped))
+        buildingInputRow.addGestureRecognizer(buildingTapGestureRecognizer)
+        
         setupViews()
         setupPickerViews()
         getLocations()
@@ -120,6 +136,7 @@ class DeliveryDestinationViewController: UIViewController {
         
         view.addSubview(specialNotesView)
         specialNotesView.addSubview(specialNotesLabel)
+        specialNotesView.addSubview(specialNotesDetailLabel)
         specialNotesView.addSubview(specialNotesTextView)
         
         titleLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 16).isActive = true
@@ -150,7 +167,14 @@ class DeliveryDestinationViewController: UIViewController {
         
         specialNotesLabel.topAnchor.constraint(equalTo: specialNotesView.topAnchor, constant: 4).isActive = true
         specialNotesLabel.leadingAnchor.constraint(equalTo: specialNotesView.leadingAnchor, constant: 8).isActive = true
-        specialNotesLabel.trailingAnchor.constraint(equalTo: specialNotesView.trailingAnchor, constant: -8).isActive = true
+//        specialNotesLabel.trailingAnchor.constraint(equalTo: specialNotesView.centerXAnchor).isActive = true
+        
+        specialNotesDetailLabel.centerYAnchor.constraint(equalTo: specialNotesLabel.centerYAnchor).isActive = true
+        specialNotesDetailLabel.leadingAnchor.constraint(equalTo: specialNotesLabel.trailingAnchor, constant: 8).isActive = true
+        specialNotesDetailLabel.trailingAnchor.constraint(equalTo: specialNotesView.trailingAnchor, constant: -8).isActive = true
+        
+        specialNotesLabel.setContentHuggingPriority(UILayoutPriority(251), for: .horizontal)
+        specialNotesLabel.setContentHuggingPriority(UILayoutPriority(251), for: .vertical)
         
         specialNotesTextView.topAnchor.constraint(equalTo: specialNotesLabel.bottomAnchor, constant: 4).isActive = true
         specialNotesTextView.bottomAnchor.constraint(equalTo: specialNotesView.bottomAnchor, constant: -8).isActive = true
@@ -170,11 +194,7 @@ class DeliveryDestinationViewController: UIViewController {
         
         buildingInputRow.textField.inputView = buildingPicker
         buildingInputRow.textField.inputAccessoryView = pickerToolbar
-//
-//        roomPicker.delegate = self
-//        roomPicker.dataSource = self
-//
-//        roomInputRow.textField.inputView = roomPicker
+        
         roomInputRow.textField.inputAccessoryView = pickerToolbar
         specialNotesTextView.inputAccessoryView = pickerToolbar
     }
@@ -236,7 +256,7 @@ class DeliveryDestinationViewController: UIViewController {
         
         if buildingInputRow.textField.isFirstResponder {
             let selectedIndex = buildingPicker.selectedRow(inComponent: 0)
-            let selectedBuilding = ProductionData.buildings[selectedIndex]
+            let selectedBuilding = ProductionData.mainBuildings[selectedIndex]
             
             buildingInputRow.textField.text = selectedBuilding
             buildingInputRow.textField.resignFirstResponder()
@@ -272,10 +292,28 @@ class DeliveryDestinationViewController: UIViewController {
 //        }
         view.endEditing(true)
     }
+    
+    @objc private func buildingRowTapped() {
+        let buildingChoiceVC = BuildingChoiceViewController()
+        buildingChoiceVC.delegate = self
+        navigationController?.pushViewController(buildingChoiceVC, animated: true)
+    }
 
 }
 
 extension DeliveryDestinationViewController: UIPickerViewDelegate, UIPickerViewDataSource {
+    
+    func pickerView(_ pickerView: UIPickerView, viewForRow row: Int, forComponent component: Int, reusing view: UIView?) -> UIView {
+        let label = UILabel();
+        label.frame.size.width = self.view.frame.width - 32
+        label.lineBreakMode = .byWordWrapping;
+        label.numberOfLines = 0;
+        label.textAlignment = .center
+        label.text = ProductionData.mainBuildings[row]
+        label.sizeToFit()
+        return label;
+    }
+    
     func numberOfComponents(in pickerView: UIPickerView) -> Int {
         return 1
     }
@@ -283,7 +321,7 @@ extension DeliveryDestinationViewController: UIPickerViewDelegate, UIPickerViewD
     func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
         switch pickerView {
         case buildingPicker:
-            return ProductionData.buildings.count
+            return ProductionData.mainBuildings.count
 //        case roomPicker:
 //            if let building = activeBuilding {
 //                return building.rooms.count
@@ -295,21 +333,28 @@ extension DeliveryDestinationViewController: UIPickerViewDelegate, UIPickerViewD
         }
     }
     
-    func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
-        switch pickerView {
-        case buildingPicker:
-            return ProductionData.buildings[row]
-//        case roomPicker:
-//            if let building = activeBuilding {
-//                return building.rooms[row]
-//            } else {
-//                return ""
-//            }
-        default:
-            return ""
-        }
+//    func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
+//        switch pickerView {
+//        case buildingPicker:
+//            return ProductionData.buildings[row]
+////        case roomPicker:
+////            if let building = activeBuilding {
+////                return building.rooms[row]
+////            } else {
+////                return ""
+////            }
+//        default:
+//            return ""
+//        }
+//    }
+    
+    
+    
+}
+
+extension DeliveryDestinationViewController: BuildingChoiceViewControllerDelegate {
+    func buildingPicked(building: String) {
+        buildingInputRow.textField.text = building
+        navigationItem.rightBarButtonItem?.isEnabled = true
     }
-    
-    
-    
 }

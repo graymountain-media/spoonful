@@ -42,6 +42,23 @@ class MainViewController: UIViewController {
         return button
     }()
     
+    lazy var demoSwitchView: UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        let tripleTapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(demoSwitchTapped))
+        tripleTapGestureRecognizer.numberOfTapsRequired = 5
+        view.addGestureRecognizer(tripleTapGestureRecognizer)
+        return view
+    }()
+    
+    let demoLabel: SpoonfulTitleLabel = {
+        let label = SpoonfulTitleLabel()
+        label.text = "DEMO MODE"
+        label.textAlignment = .center
+        label.isHidden = true
+        return label
+    }()
+    
 //    lazy var tapGestureRecognizer: UITapGestureRecognizer = {
 //        let recognizer = UITapGestureRecognizer()
 //        recognizer.addTarget(self, action: #selector(dismissProfileMenu))
@@ -97,6 +114,8 @@ class MainViewController: UIViewController {
         view.addSubview(newOrderButton)
         view.addSubview(logoImageView)
         view.addSubview(profileButton)
+        view.addSubview(demoLabel)
+        view.addSubview(demoSwitchView)
 //        view.addSubview(profileMenu)
 //        view.bringSubviewToFront(profileMenu)
         
@@ -115,19 +134,26 @@ class MainViewController: UIViewController {
         profileButton.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -8).isActive = true
         profileButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 8).isActive = true
         
-//        profileMenu.frame = CGRect(x: -self.view.frame.width/2, y: 0, width: self.view.frame.width/2, height: self.view.frame.height)
+        demoLabel.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor).isActive = true
+        demoLabel.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor).isActive = true
+        demoLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 8).isActive = true
+        
+        demoSwitchView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        demoSwitchView.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.4).isActive = true
+        demoSwitchView.heightAnchor.constraint(equalToConstant: 80).isActive = true
+        demoSwitchView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor).isActive = true
     }
     
     private func updateCurrentUser() {
         if let currentUser = Auth.auth().currentUser {
-            FirebaseController.shared.getCustomerId(forUser: currentUser) { (custID) in
-                let currentCustomer = Customer(user: currentUser, customerId: custID)
-                
-                print("CUST ID AFTER UPDATE: \(custID)")
-                CustomerController.shared.currentCustomer = currentCustomer
+            var prodCustomerID = ""
+            FirebaseController.shared.getProductionCustomerId(forUser: currentUser) { (custID) in
+                prodCustomerID = custID
+                FirebaseController.shared.getSandboxCustomerId(forUser: currentUser, completion: { (custID) in
+                    let currentCustomer = Customer(user: currentUser, sandboxCustomerID: custID, prodCustomerID: prodCustomerID)
+                    CustomerController.shared.currentCustomer = currentCustomer
+                })
             }
-            
-            
         } else {
             print("no current user")
             CustomerController.shared.currentCustomer = nil
@@ -136,10 +162,10 @@ class MainViewController: UIViewController {
     //MARK:- Button Actions
     
     @objc private func newOrderButtonPressed() {
+        OrderController.shared.resetOrder()
         let checkLocationVC = CheckLocationViewController()
         checkLocationVC.delegate = self
         checkLocationVC.modalPresentationStyle = UIModalPresentationStyle.pageSheet
-        
         let hasSeenLocationMessage = UserDefaults.standard.bool(forKey: "hasSeenLocationMessage")
         
         if hasSeenLocationMessage {
@@ -183,6 +209,11 @@ class MainViewController: UIViewController {
             present(alert, animated: true, completion: nil)
         }
         
+    }
+    
+    @objc private func demoSwitchTapped() {
+        SettingsManager.shared.changeState()
+        demoLabel.isHidden = SettingsManager.shared.isProduction
     }
     
 }
