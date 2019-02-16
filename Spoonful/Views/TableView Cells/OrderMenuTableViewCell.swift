@@ -112,10 +112,11 @@ class OrderMenuTableViewCell: UITableViewCell {
         titleLabel.text = ""
     }
     
-    func updateCellWith(cereals: [Cereal], title: String) {
+    func updateCellWith(cereals: [Cereal], title: String, price: Double) {
         firstCerealImage.image = cereals[0].image
         secondCerealImage.image = cereals[1].image
-        titleLabel.text = title
+        let cerealPrice = price == 3.50 ? "3.50" : "\(price)"
+        titleLabel.text = "\(title) $\(cerealPrice)"
         subTitleLabel.text = "\(cereals[0].name) + \(cereals[1].name)"
     }
 

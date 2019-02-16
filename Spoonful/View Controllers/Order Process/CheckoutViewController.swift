@@ -9,6 +9,7 @@
 import UIKit
 import Braintree
 import BraintreeDropIn
+import PassKit
 
 class CheckoutViewController: UIViewController {
     
@@ -131,7 +132,6 @@ class CheckoutViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = main
         self.title = "Checkout"
-        // Do any additional setup after loading the view.
         
         customer = CustomerController.shared.currentCustomer
         
@@ -173,7 +173,9 @@ class CheckoutViewController: UIViewController {
                 orderSecondCerealImageView.image = order.cereals[1].image
             }
             
-            orderMilkImageView.image = UIImage(named: "mockMilk")
+            if let milk = order.milk {
+               orderMilkImageView.image = UIImage(named: milk.imageName) 
+            }
             
             orderView.addSubview(orderStackView)
             
@@ -339,6 +341,8 @@ class CheckoutViewController: UIViewController {
     private func paymentButtonTapped() {
         let request =  BTDropInRequest()
         request.vaultManager = true
+        request.paypalDisabled = true
+        request.venmoDisabled = true
         print("FINAL CLIENT TOKEN: \(clientToken)")
         let dropIn = BTDropInController(authorization: clientToken, request: request)
         { (controller, result, error) in
@@ -347,14 +351,27 @@ class CheckoutViewController: UIViewController {
             } else if (result?.isCancelled == true) {
                 print("CANCELLED")
             } else if let result = result {
-                // Use the BTDropInResult properties to update your UI
-                
-                self.paymentView.detail = result.paymentDescription
-                guard let paymentMethod = result.paymentMethod else {
-                    print("could not get payment method for nonce")
-                    return
+                switch result.paymentOptionType {
+                case .applePay:
+                    controller.dismiss(animated: true, completion: nil)
+                    
+                    let paymentRequest = self.paymentRequest()
+                    if let paymentVC = PKPaymentAuthorizationViewController(paymentRequest: paymentRequest) as PKPaymentAuthorizationViewController? {
+                        paymentVC.delegate = self
+                        self.present(paymentVC, animated: true, completion: nil)
+                    } else {
+                        print("Cannot make payment VC")
+                    }
+                    
+                default:
+                    guard let paymentMethod = result.paymentMethod else {
+                        print("could not get payment method for nonce")
+                        return
+                    }
+                    self.paymentNonce = paymentMethod.nonce
                 }
-                self.paymentNonce = paymentMethod.nonce
+                self.paymentView.detail = result.paymentDescription
+                
                 self.completeButton.isEnabled = true
             }
             controller.dismiss(animated: true, completion: nil)
@@ -365,6 +382,33 @@ class CheckoutViewController: UIViewController {
             print("Drop in not created")
         }
         
+    }
+    
+}
+
+// MARK: - Apple Pay
+
+extension CheckoutViewController: PKPaymentAuthorizationViewControllerDelegate {
+    func paymentAuthorizationViewControllerDidFinish(_ controller: PKPaymentAuthorizationViewController) {
+        print("paymentAuthorizationViewControllerDidFinish")
+    }
+    
+    
+    func paymentRequest() -> PKPaymentRequest {
+        let paymentRequest = PKPaymentRequest()
+        paymentRequest.merchantIdentifier = appleMerchantID
+        paymentRequest.supportedNetworks = [PKPaymentNetwork.amex, PKPaymentNetwork.visa, PKPaymentNetwork.masterCard]
+        paymentRequest.merchantCapabilities = PKMerchantCapability.capability3DS
+        paymentRequest.countryCode = "US"
+        paymentRequest.currencyCode = "USD"
+        
+        let orderSummaryItem = PKPaymentSummaryItem(label: "Test Oder", amount: 0.00)
+        let totalSummaryItem = PKPaymentSummaryItem(label: "Total", amount: 3.50)
+        let deliveryFeeSummaryItem = PKPaymentSummaryItem(label: "Delivery Fee", amount: 0.00)
+        
+        paymentRequest.paymentSummaryItems = [orderSummaryItem,totalSummaryItem,deliveryFeeSummaryItem]
+        
+        return paymentRequest
     }
     
 }

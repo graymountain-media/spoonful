@@ -53,11 +53,11 @@ class Products {
     static let cereal: [Cereal] = [Products.appleJacks, Products.captainCruch, Products.cheerios, Products.cinnamonToastCrunch, Products.cocoPuffs, Products.cookieCrisp, Products.fruitLoops, Products.frostedFlakes, Products.fruityPebbles, Products.honeyBunchesOfOats, Products.honeyComb, Products.honeyNutCheerios, Products.luckyCharms, Products.frostedFlakes, Products.multigrainCheerios, Products.oreoOs, Products.raisinBran, Products.reesesPuffs, Products.specialK, Products.trix]
     
     static let cocktails = [Cocktail(name: "SNICKERDOODLE", cereals: [Products.cookieCrisp, Products.cinnamonToastCrunch], price: 3.75),
-                                Cocktail(name: "THE IMPOSTER", cereals: [Products.cheerios, Products.fruitLoops], price: 3.75),
+                                Cocktail(name: "THE IMPOSTER", cereals: [Products.cheerios, Products.fruitLoops], price: 3.50),
                                 Cocktail(name: "THE PUFFS", cereals: [Products.reesesPuffs, Products.cocoPuffs], price: 3.50),
                                 Cocktail(name: "THE RAINBOW", cereals: [Products.fruitLoops, Products.fruityPebbles], price: 3.50),
                                 Cocktail(name: "HONEY POT", cereals: [Products.honeyNutCheerios, Products.honeyComb], price: 3.50),
-                                Cocktail(name: "HAPPY HEART", cereals: [Products.cheerios, Products.specialK], price: 5.55)]
+                                Cocktail(name: "HAPPY HEART", cereals: [Products.cheerios, Products.specialK], price: 3.75)]
     
     static let milk = [Milk(type: .twoPercent), Milk(type: .whole), Milk(type: .fatFree), Milk(type: .almond)]
 }

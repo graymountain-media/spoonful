@@ -18,16 +18,25 @@ struct Milk {
     }
     let type : MilkType
     let extraPrice: Double
+    var imageName: String = ""
     
     init(type: MilkType) {
         self.type = type
-        if type == MilkType.almond{
+        switch type {
+        case .twoPercent:
+            self.extraPrice = 0.00
+            self.imageName = "twoPercent"
+        case .fatFree:
+            self.extraPrice = 0.00
+            self.imageName = "fatFree"
+        case .whole:
+            self.extraPrice = 0.00
+            self.imageName = "whole"
+        case .almond:
             self.extraPrice = 1.80
-        } else if type == MilkType.soy {
-            self.extraPrice = 1.25
-        } else {
+            self.imageName = "almond"
+        default:
             self.extraPrice = 0.00
         }
-        
     }
 }

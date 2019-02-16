@@ -11,7 +11,9 @@ target 'Spoonful' do
   pod 'Firebase/Auth'
   pod 'Firebase/Database'
   pod 'Firebase/DynamicLinks'
+  pod 'Firebase/Messaging'
   pod 'BraintreeDropIn'
+  pod 'Braintree/Apple-Pay'
 
   target 'SpoonfulTests' do
     inherit! :search_paths

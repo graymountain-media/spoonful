@@ -107,7 +107,7 @@ extension OrderMenuViewController: UITableViewDelegate, UITableViewDataSource {
                 return UITableViewCell()
             }
             let cocktail = Products.cocktails[indexPath.row - 1]
-            cell.updateCellWith(cereals: cocktail.cereals, title: cocktail.name)
+            cell.updateCellWith(cereals: cocktail.cereals, title: cocktail.name, price: cocktail.price)
             return cell
         }
     }

@@ -32,7 +32,7 @@ let ref = Database.database().reference()
 //let baseURL = URL(string: "http://localhost:3003")!
 let sandboxBaseURL = URL(string: "https://spoonful-app.herokuapp.com")!
 let productionBaseURL = URL(string: "https://spoonful-app-production.herokuapp.com")!
-//let appleMerchantID = "merchant.com.Spoonful"
+let appleMerchantID = "merchant.com.Spoonful"
 let companyName = "Spoonful"
 
 // Tokenization Key

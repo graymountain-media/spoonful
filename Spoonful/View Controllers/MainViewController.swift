@@ -8,19 +8,35 @@
 
 import UIKit
 import Firebase
+import Alamofire
 
 class MainViewController: UIViewController {
     
     let profileCellId = "ProfileCell"
     var isLoggedIn = false
+    var isOpen = false {
+        didSet{
+            if isOpen {
+                storeStatusLabel.text = "Store Is Open"
+                storeStatusLabel.textColor = .green
+            } else {
+                storeStatusLabel.text = "Store Is Closed"
+                storeStatusLabel.textColor = .red
+            }
+        }
+    }
     
     var handle: AuthStateDidChangeListenerHandle?
     
+    
     lazy var profileButton: UIButton = {
-        let button = UIButton(frame: CGRect(x: 0, y: 0, width: 39, height: 39))
+        let button = UIButton(frame: CGRect(x: 0, y: 0, width: 38, height: 38))
         button.setImage(UIImage(named: "profileWhite"), for: .normal)
         button.contentMode = .scaleAspectFit
         button.translatesAutoresizingMaskIntoConstraints = false
+        button.backgroundColor = main
+        button.layer.cornerRadius = 20
+        button.clipsToBounds = true
         button.addTarget(self, action: #selector(profileButtonPressed), for: .touchUpInside)
         return button
     }()
@@ -30,6 +46,14 @@ class MainViewController: UIViewController {
     let logoImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.image = UIImage(named: "logo")
+        imageView.contentMode = .scaleAspectFit
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        return imageView
+    }()
+    
+    let cerealImageView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.image = UIImage(named: "spilledCereal")
         imageView.contentMode = .scaleAspectFit
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
@@ -59,12 +83,16 @@ class MainViewController: UIViewController {
         return label
     }()
     
-//    lazy var tapGestureRecognizer: UITapGestureRecognizer = {
-//        let recognizer = UITapGestureRecognizer()
-//        recognizer.addTarget(self, action: #selector(dismissProfileMenu))
-//        return recognizer
-//    }()
-    
+    let storeStatusLabel: UILabel = {
+        let label = UILabel()
+        label.textColor = .green
+        label.numberOfLines = 0
+        label.text = "Store is Open"
+        label.textAlignment = .center
+        label.font = UIFont.systemFont(ofSize: 14, weight: .bold)
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
     //MARK:- Life Cycle
     
     override func viewDidLoad() {
@@ -82,6 +110,11 @@ class MainViewController: UIViewController {
         CheckLocationManager.shared.locationManager.startUpdatingLocation()
         updateCurrentUser()
         setAuthenticationHandler()
+        checkStoreStatus { (isOpen) in
+            if let isOpen = isOpen {
+                self.isOpen = isOpen
+            }
+        }
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -112,12 +145,16 @@ class MainViewController: UIViewController {
     
     private func setViews() {
         view.addSubview(newOrderButton)
+        view.addSubview(cerealImageView)
         view.addSubview(logoImageView)
         view.addSubview(profileButton)
         view.addSubview(demoLabel)
         view.addSubview(demoSwitchView)
-//        view.addSubview(profileMenu)
-//        view.bringSubviewToFront(profileMenu)
+        view.addSubview(storeStatusLabel)
+        
+        storeStatusLabel.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 30).isActive = true
+        storeStatusLabel.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -30).isActive = true
+        storeStatusLabel.bottomAnchor.constraint(equalTo: newOrderButton.topAnchor, constant: -8).isActive = true
         
         newOrderButton.heightAnchor.constraint(equalToConstant: 44).isActive = true
         newOrderButton.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 30).isActive = true
@@ -142,6 +179,11 @@ class MainViewController: UIViewController {
         demoSwitchView.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.4).isActive = true
         demoSwitchView.heightAnchor.constraint(equalToConstant: 80).isActive = true
         demoSwitchView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor).isActive = true
+        
+//        cerealImageView.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.4).isActive = true
+//        cerealImageView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor).isActive = true
+        cerealImageView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor).isActive = true
+        cerealImageView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
     }
     
     private func updateCurrentUser() {
@@ -159,23 +201,51 @@ class MainViewController: UIViewController {
             CustomerController.shared.currentCustomer = nil
         }
     }
+    
+    private func checkStoreStatus(_ completion: @escaping(Bool?) -> Void) {
+        FirebaseController.shared.checkStoreStatus {(isOpen, errorString) in
+            if let isOpen = isOpen {
+                completion(isOpen)
+                return
+            }
+            completion(false)
+            return
+        }
+    }
     //MARK:- Button Actions
     
     @objc private func newOrderButtonPressed() {
-        OrderController.shared.resetOrder()
-        let checkLocationVC = CheckLocationViewController()
-        checkLocationVC.delegate = self
-        checkLocationVC.modalPresentationStyle = UIModalPresentationStyle.pageSheet
-        let hasSeenLocationMessage = UserDefaults.standard.bool(forKey: "hasSeenLocationMessage")
-        
-        if hasSeenLocationMessage {
-            checkLocation()
-        } else {
-            self.present(checkLocationVC, animated: true) {
-                print("Presentation complete")
-                UserDefaults.standard.setValue(true, forKey: "hasSeenLocationMessage")
-            }
-            return 
+        if !SettingsManager.shared.isProduction {
+            OrderController.shared.resetOrder()
+            navigationController?.pushViewController(DeliveryDestinationViewController(), animated: true)
+            return
+        }
+        DispatchQueue.main.async {
+            self.checkStoreStatus({ (isOpen) in
+                if let isOpen = isOpen, isOpen == false {
+                    let alert = UIAlertController(title: "Shop Closed", message: "Sorry! We are currently closed and not doing deliveries at this time. Please try again later!", preferredStyle: .alert)
+                    let okayAction = UIAlertAction(title: "Okay", style: .cancel, handler: nil)
+                    alert.addAction(okayAction)
+                    self.present(alert, animated: true, completion: nil)
+                    return
+                } else {
+                    OrderController.shared.resetOrder()
+                    let checkLocationVC = CheckLocationViewController()
+                    checkLocationVC.delegate = self
+                    checkLocationVC.modalPresentationStyle = UIModalPresentationStyle.pageSheet
+                    let hasSeenLocationMessage = UserDefaults.standard.bool(forKey: "hasSeenLocationMessage")
+                    
+                    if hasSeenLocationMessage {
+                        self.checkLocation()
+                    } else {
+                        self.present(checkLocationVC, animated: true) {
+                            print("Presentation complete")
+                            UserDefaults.standard.setValue(true, forKey: "hasSeenLocationMessage")
+                        }
+                        return
+                    }
+                }
+            })
         }
     }
     

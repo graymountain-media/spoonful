@@ -186,6 +186,35 @@ class FirebaseController {
             
         }
     }
+    
+    func checkStoreStatus(completion: @escaping (Bool?, String?) -> Void) {
+        ref.child("store").child("isOpen").observeSingleEvent(of: .value) { (snapshot) in
+            if let isOpen = snapshot.value as? Bool {
+                completion(isOpen, nil)
+                return
+            } else {
+                completion(nil, "Could not get store status")
+                return
+            }
+        }
+    }
+    
+    func updateStoreStatus(completion: @escaping (Bool?, String?) -> Void) {
+        FirebaseController.shared.checkStoreStatus { (isOpen, error) in
+            if let error = error {
+                completion(nil, error)
+                return
+            }
+            
+            if let isOpen = isOpen {
+                let newStatus = !isOpen
+                ref.child("store").child("isOpen").setValue(newStatus)
+                completion(newStatus, nil)
+                return
+            }
+            
+        }
+    }
 //    var cereals: [Cereal]
 //    var milk: Milk?
 //    var total: Double

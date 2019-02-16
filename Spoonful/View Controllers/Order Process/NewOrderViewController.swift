@@ -529,7 +529,7 @@ class NewOrderViewController: UIViewController {
             print("Cannot get tapped cell")
             return
         }
-        
+        var selectedImageName = ""
         for i in 0...collectionView.numberOfItems(inSection: 0) {
             let tempCell = collectionView.cellForItem(at: IndexPath(row: i, section: 0))
             tempCell?.layer.borderWidth = 0
@@ -542,7 +542,8 @@ class NewOrderViewController: UIViewController {
         if Products.milk[indexPath.row].type == .almond {
             total += 1.80
         }
-        orderMilkSlotImageView.image = UIImage(named: "mockMilk")
+        selectedImageName = Products.milk[indexPath.row].imageName
+        orderMilkSlotImageView.image = UIImage(named: selectedImageName)
         yourOrderView.addArrangedSubview(orderMilkSlotImageView)
         checkoutButton.isEnabled = true
         UIView.animate(withDuration: 0.1) {

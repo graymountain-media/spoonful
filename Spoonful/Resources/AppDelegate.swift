@@ -9,9 +9,11 @@
 import UIKit
 import Firebase
 import BraintreeDropIn
+import FirebaseMessaging
+import UserNotifications
 
 @UIApplicationMain
- class AppDelegate: UIResponder, UIApplicationDelegate {
+class AppDelegate: UIResponder, UIApplicationDelegate {
     
     var window: UIWindow?
     
@@ -34,15 +36,44 @@ import BraintreeDropIn
         
         configureBraintreeUI()
         
+        if #available(iOS 10.0, *) {
+            // For iOS 10 display notification (sent via APNS)
+            UNUserNotificationCenter.current().delegate = self
+            
+            let authOptions: UNAuthorizationOptions = [.alert, .badge, .sound]
+            UNUserNotificationCenter.current().requestAuthorization(
+                options: authOptions,
+                completionHandler: {_, _ in })
+        } else {
+            let settings: UIUserNotificationSettings =
+                UIUserNotificationSettings(types: [.alert, .badge, .sound], categories: nil)
+            application.registerUserNotificationSettings(settings)
+        }
+        
+        application.registerForRemoteNotifications()
+        
         return true
     }
     
-    private func configureBraintreeUI() {        BTUIKAppearance.sharedInstance()?.tintColor = main
+    private func configureBraintreeUI() {
+        BTUIKAppearance.sharedInstance()?.tintColor = main
         BTUIKAppearance.sharedInstance()?.formBackgroundColor = .white
         BTUIKAppearance.sharedInstance()?.primaryTextColor = .black
         BTUIKAppearance.sharedInstance()?.secondaryTextColor = .black
         BTUIKAppearance.sharedInstance()?.blurStyle = UIBlurEffect.Style.light
         BTUIKAppearance.sharedInstance()?.useBlurs = false
     }
+    
+    func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable : Any], fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
+    }
+    
+}
+
+func application(application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: NSData)
+{
+}
+
+extension AppDelegate: UNUserNotificationCenterDelegate {
+    
 }
 
